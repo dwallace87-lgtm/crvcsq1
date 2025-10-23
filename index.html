@@ -18,13 +18,49 @@
   .tooltip-trigger{ color:#2563eb; font-weight:600; border-bottom:2px dotted #bfdbfe; cursor:pointer; transition:all .2s; }
   .tooltip-trigger:hover{ color:#1d4ed8; background:#eff6ff; }
   .hidden{ display:none; }
-  .highlight-toggle{ display:inline-flex; align-items:center; gap:.25rem; padding:.35rem .85rem; border-radius:9999px; border:1px solid #e5e7eb; font-size:.75rem; font-weight:600; color:#1f2937; background:#fff; transition:all .2s; }
-  .highlight-toggle:hover{ border-color:#c7d2fe; color:#1d4ed8; }
-  .highlight-toggle[aria-pressed="true"]{ border-color:#6366f1; box-shadow:0 0 0 2px rgba(99,102,241,.18); color:#312e81; }
-  .highlight-toggle[data-color="yellow"][aria-pressed="true"]{ background-color:#fef08a; }
-  .highlight-toggle[data-color="green"][aria-pressed="true"]{ background-color:#bbf7d0; }
-  .highlight-yellow{ background-color:#fefce8 !important; box-shadow:inset 0 0 0 1px rgba(202,138,4,.35); }
-  .highlight-green{ background-color:#ecfdf3 !important; box-shadow:inset 0 0 0 1px rgba(22,163,74,.35); }
+  @keyframes highlight-glint {
+    0% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+    50% { box-shadow: 0 0 10px rgba(255,255,255,0.75); }
+    100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+  }
+  .highlight-yellow {
+    background-color:#fcf9b2;
+    transition:background-color .3s ease;
+    padding:0 .2rem;
+    border-radius:.25rem;
+    box-shadow:inset 0 0 0 1px rgba(202,138,4,.35);
+    animation:highlight-glint 3s infinite ease-in-out;
+  }
+  .highlight-green {
+    background-color:#c7f2cb;
+    transition:background-color .3s ease;
+    padding:0 .2rem;
+    border-radius:.25rem;
+    box-shadow:inset 0 0 0 1px rgba(22,163,74,.35);
+    animation:highlight-glint 3s infinite ease-in-out;
+  }
+  .highlight-surface.highlights-off .highlight-yellow,
+  .highlight-surface.highlights-off .highlight-green {
+    background-color:transparent !important;
+    box-shadow:none;
+    animation:none;
+  }
+  .highlight-toolbar{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem .75rem; }
+  .highlight-toolbar .toolbar-label{ font-size:.65rem; letter-spacing:.1em; font-weight:700; text-transform:uppercase; color:#6b7280; }
+  .highlight-btn{ display:inline-flex; align-items:center; gap:.35rem; padding:.45rem .9rem; border-radius:9999px; font-size:.8rem; font-weight:600; box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); border:1px solid transparent; background:#fff; color:#1f2937; transition:transform .2s ease, filter .2s ease, box-shadow .2s ease; cursor:pointer; }
+  .highlight-btn svg{ width:1rem; height:1rem; }
+  .highlight-btn:focus{ outline:2px solid transparent; outline-offset:2px; box-shadow:0 0 0 4px rgba(99,102,241,.18), 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+  .highlight-btn:active{ transform:scale(.96); filter:brightness(.95); }
+  .highlight-btn-yellow{ background-color:#fcf9b2; border-color:#fde047; color:#78350f; }
+  .highlight-btn-yellow:hover{ transform:scale(1.05); filter:brightness(.95); }
+  .highlight-btn-green{ background-color:#c7f2cb; border-color:#86efac; color:#14532d; }
+  .highlight-btn-green:hover{ transform:scale(1.05); filter:brightness(.95); }
+  .highlight-btn-toggle{ background-image:linear-gradient(to right,#818cf8,#6366f1); color:#fff; border-color:transparent; }
+  .highlight-btn-toggle:hover{ transform:scale(1.05); filter:brightness(1.05); }
+  .highlight-btn-clear{ background-image:linear-gradient(to right,#f87171,#ef4444); color:#fff; border-color:transparent; }
+  .highlight-btn-clear:hover{ transform:scale(1.05); filter:brightness(1.05); }
+  html[dir="rtl"] .highlight-toolbar .toolbar-label{ text-transform:none; letter-spacing:normal; }
+  html[dir="rtl"] .highlight-btn{ flex-direction:row-reverse; }
   #submit-work-btn[disabled]{ cursor:not-allowed; }
   /* Manhattan map hotspots */
   .hotspot{ position:absolute; border:2px solid rgba(59,130,246,.9); background:rgba(59,130,246,.12); border-radius:.5rem; cursor:pointer; outline:none; }
@@ -115,12 +151,39 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material">Source Material</h4>
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            <span class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Highlights</span>
-            <button type="button" class="highlight-toggle" data-color="yellow" data-target="source-a-material" aria-pressed="false">Yellow</button>
-            <button type="button" class="highlight-toggle" data-color="green" data-target="source-a-material" aria-pressed="false">Green</button>
+          <div class="highlight-toolbar mb-3" data-highlight-target="source-a-material">
+            <span class="toolbar-label" data-i18n="highlightHeading">Highlights</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" class="highlight-btn highlight-btn-yellow" data-highlight-action="yellow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightYellow">Highlight Yellow</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-green" data-highlight-action="green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightGreen">Highlight Green</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-toggle" data-highlight-action="toggle" aria-pressed="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n-toggle>Hide Highlights</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-clear" data-highlight-action="clear">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="clearHighlights">Clear All</span>
+              </button>
+            </div>
           </div>
-          <div id="source-a-material" class="prose prose-indigo bg-gray-50 p-4 rounded-lg border max-h-[600px] overflow-y-auto">
+          <div id="source-a-material" class="highlight-surface prose prose-indigo bg-gray-50 p-4 rounded-lg border max-h-[600px] overflow-y-auto">
             <p><strong>Background:</strong> This famous letter was sent to the governing assembly of the Dutch Republic, the <span class="tooltip-trigger" data-definition="The governing assembly (like a congress or parliament) of the Dutch Republic.">States General</span>. The Dutch West India Company ran the colony of New Netherland, and <span class="tooltip-trigger" data-pronunciation="PEE-ter YAHNS SHAH-gen" data-definition="A Dutch merchant and a director of the West India Company.">Pieter Jansz Schaghen</span> served on both the company board and the States General. He was also a merchant who traded grain, so he understood the grain samples he mentions. Schaghen wrote to share the exciting news that the colony, begun around 1624 after Henry Hudson explored the area in 1609, was growing and doing well.</p>
             <hr>
             <p><strong>Translation:</strong></p>
@@ -188,12 +251,39 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material-2">Source Material</h4>
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            <span class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Highlights</span>
-            <button type="button" class="highlight-toggle" data-color="yellow" data-target="source-b-material" aria-pressed="false">Yellow</button>
-            <button type="button" class="highlight-toggle" data-color="green" data-target="source-b-material" aria-pressed="false">Green</button>
+          <div class="highlight-toolbar mb-3" data-highlight-target="source-b-material">
+            <span class="toolbar-label" data-i18n="highlightHeading">Highlights</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" class="highlight-btn highlight-btn-yellow" data-highlight-action="yellow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightYellow">Highlight Yellow</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-green" data-highlight-action="green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightGreen">Highlight Green</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-toggle" data-highlight-action="toggle" aria-pressed="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n-toggle>Hide Highlights</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-clear" data-highlight-action="clear">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="clearHighlights">Clear All</span>
+              </button>
+            </div>
           </div>
-          <div id="source-b-material" class="prose prose-indigo bg-gray-50 p-4 rounded-lg border">
+          <div id="source-b-material" class="highlight-surface prose prose-indigo bg-gray-50 p-4 rounded-lg border">
             <p><strong id="i-map-caption">1660 Map of the City of New Amsterdam (Castello Plan)</strong></p>
             <p id="i-map-tip">Click the highlighted boxes to notice key features.</p>
 
@@ -257,12 +347,39 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material-3">Source Material</h4>
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            <span class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Highlights</span>
-            <button type="button" class="highlight-toggle" data-color="yellow" data-target="source-c-material" aria-pressed="false">Yellow</button>
-            <button type="button" class="highlight-toggle" data-color="green" data-target="source-c-material" aria-pressed="false">Green</button>
+          <div class="highlight-toolbar mb-3" data-highlight-target="source-c-material">
+            <span class="toolbar-label" data-i18n="highlightHeading">Highlights</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" class="highlight-btn highlight-btn-yellow" data-highlight-action="yellow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightYellow">Highlight Yellow</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-green" data-highlight-action="green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightGreen">Highlight Green</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-toggle" data-highlight-action="toggle" aria-pressed="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n-toggle>Hide Highlights</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-clear" data-highlight-action="clear">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="clearHighlights">Clear All</span>
+              </button>
+            </div>
           </div>
-          <div id="source-c-material" class="prose prose-indigo bg-gray-50 p-4 rounded-lg border max-h-[600px] overflow-y-auto">
+          <div id="source-c-material" class="highlight-surface prose prose-indigo bg-gray-50 p-4 rounded-lg border max-h-[600px] overflow-y-auto">
             <p><strong>SQ1: Featured Source C</strong></p>
             <p><strong>Munsee Indians</strong></p>
             <p>The <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> were historically considered to be a part of the <span class="tooltip-trigger" data-pronunciation="DELL-uh-wair" data-definition="Also called the Lenape, an Indigenous people of the Northeastern Woodlands who lived in present-day New York, New Jersey, Pennsylvania, and Delaware.">Delaware</span>, or <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenape</span>, although they lived separately from the Delaware nation for most of their existence. Some scholars argue that the Munsee should not be considered Delaware because of stark differences in dialect. The United States referred to the Munsee as a separate tribe in the <span class="tooltip-trigger" data-definition="An 1805 agreement between the United States and several Native nations that ceded land along the south shore of Lake Erie.">Treaty of Fort Industry</span>.</p>
@@ -317,13 +434,40 @@
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material-4">Source Material</h4>
 
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            <span class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Highlights</span>
-            <button type="button" class="highlight-toggle" data-color="yellow" data-target="source-d-material" aria-pressed="false">Yellow</button>
-            <button type="button" class="highlight-toggle" data-color="green" data-target="source-d-material" aria-pressed="false">Green</button>
+          <div class="highlight-toolbar mb-3" data-highlight-target="source-d-material">
+            <span class="toolbar-label" data-i18n="highlightHeading">Highlights</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" class="highlight-btn highlight-btn-yellow" data-highlight-action="yellow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightYellow">Highlight Yellow</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-green" data-highlight-action="green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="highlightGreen">Highlight Green</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-toggle" data-highlight-action="toggle" aria-pressed="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n-toggle>Hide Highlights</span>
+              </button>
+              <button type="button" class="highlight-btn highlight-btn-clear" data-highlight-action="clear">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span data-i18n="clearHighlights">Clear All</span>
+              </button>
+            </div>
           </div>
 
-          <div id="source-d-material" class="rounded-lg border border-gray-200 bg-white p-4">
+          <div id="source-d-material" class="highlight-surface rounded-lg border border-gray-200 bg-white p-4">
             <!-- Integrated embed -->
             <section id="wfn-map-embed" class="max-w-[1000px] mx-auto">
             <!-- Toggle -->
@@ -486,7 +630,13 @@ const STR = {
     language:"Language",
     sqTitle:"Supporting Question 1:",
     sqBody:"Did the Munsee Lenape band of Algonquin benefit from the sale of Manhattan Island?",
-    instructions:"Carefully examine each featured source. Type your answers directly into the boxes. Click any blue dotted word for a definition.",
+    instructions:"Carefully examine each featured source. Select text with your mouse, then click a highlight color to mark important ideas. Type your answers directly into the boxes. Click any blue dotted word for a definition.",
+    highlightHeading:"Highlights",
+    highlightYellow:"Highlight Yellow",
+    highlightGreen:"Highlight Green",
+    hideHighlights:"Hide Highlights",
+    showHighlights:"Show Highlights",
+    clearHighlights:"Clear All",
     sourceMaterial:"Source Material",
     analysisStep:"Analysis Step",
     yourAnalysis:"Your Analysis",
@@ -531,7 +681,13 @@ const STR = {
     language:"Idioma",
     sqTitle:"Pregunta guía 1:",
     sqBody:"¿Se benefició la banda Munsee Lenape de la venta de la isla de Manhattan?",
-    instructions:"Examina cada fuente. Escribe tus respuestas en las casillas. Haz clic en las palabras punteadas en azul para ver la definición.",
+    instructions:"Examina atentamente cada fuente destacada. Selecciona el texto con el mouse y luego haz clic en un color para resaltar las ideas importantes. Escribe tus respuestas directamente en las casillas. Haz clic en cualquier palabra punteada en azul para ver la definición.",
+    highlightHeading:"Resaltados",
+    highlightYellow:"Resaltar en amarillo",
+    highlightGreen:"Resaltar en verde",
+    hideHighlights:"Ocultar resaltados",
+    showHighlights:"Mostrar resaltados",
+    clearHighlights:"Borrar todo",
     sourceMaterial:"Material de la fuente",
     analysisStep:"Paso de análisis",
     yourAnalysis:"Tu análisis",
@@ -575,7 +731,13 @@ const STR = {
     language:"Langue",
     sqTitle:"Question directrice 1 :",
     sqBody:"La bande munsee lenape a-t-elle profité de la vente de Manhattan ?",
-    instructions:"Examinez chaque source. Saisissez vos réponses dans les cases. Cliquez sur un mot en pointillé bleu pour la définition.",
+    instructions:"Examinez attentivement chaque source proposée. Sélectionnez le texte avec votre souris puis cliquez sur une couleur pour surligner les idées importantes. Saisissez vos réponses directement dans les cases. Cliquez sur un mot en pointillé bleu pour afficher la définition.",
+    highlightHeading:"Surlignages",
+    highlightYellow:"Surligner en jaune",
+    highlightGreen:"Surligner en vert",
+    hideHighlights:"Masquer les surlignages",
+    showHighlights:"Afficher les surlignages",
+    clearHighlights:"Effacer tout",
     sourceMaterial:"Texte de la source",
     analysisStep:"Étape d’analyse",
     yourAnalysis:"Votre analyse",
@@ -619,7 +781,13 @@ const STR = {
     language:"اللغة",
     sqTitle:"سؤال داعم 1:",
     sqBody:"هل استفادت جماعة المونسي من شعب لنابي من بيع جزيرة مانهاتن؟",
-    instructions:"افحص كل مصدر. اكتب إجاباتك في الخانات. اضغط على الكلمات ذات النقاط الزرقاء لعرض التعريف.",
+    instructions:"افحص كل مصدر بعناية. ظلل النص بالفأرة ثم اضغط زر اللون لتظليل الأفكار المهمة. اكتب إجاباتك مباشرة في الخانات. اضغط على الكلمات ذات النقاط الزرقاء لعرض التعريف.",
+    highlightHeading:"التظليلات",
+    highlightYellow:"تظليل بالأصفر",
+    highlightGreen:"تظليل بالأخضر",
+    hideHighlights:"إخفاء التظليلات",
+    showHighlights:"إظهار التظليلات",
+    clearHighlights:"مسح جميع التظليلات",
     sourceMaterial:"نص المصدر",
     analysisStep:"خطوة التحليل",
     yourAnalysis:"تحليلك",
@@ -750,6 +918,8 @@ function setLang(code){
   qs('#i-summary-label').textContent = t.summaryLabel;
   qs('#i-r').textContent = t.R; qs('#i-a').textContent = t.A; qs('#i-c').textContent = t.C; qs('#i-e').textContent = t.E;
   qs('#i-r-desc').textContent = t.Rdesc; qs('#i-a-desc').textContent = t.Adesc; qs('#i-c-desc').textContent = t.Cdesc; qs('#i-e-desc').textContent = t.Edesc;
+
+  updateHighlightTexts();
 
   // Close any open bubbles
   closeMapBubble(); closeGlossary();
@@ -902,6 +1072,130 @@ addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeGlossary(); });
   btnHide.addEventListener('click', hideWithCounty);
 })();
 
+/* ===================== Highlight tools ===================== */
+const highlightToolbars = [];
+
+function applyHighlightToTarget(targetEl, cssClass) {
+  const selection = window.getSelection();
+  if (!selection?.rangeCount || selection.isCollapsed) {
+    return false;
+  }
+
+  const range = selection.getRangeAt(0);
+  if (!targetEl.contains(range.commonAncestorContainer)) {
+    selection.removeAllRanges();
+    return false;
+  }
+
+  const span = document.createElement('span');
+  span.className = cssClass;
+  let didApply = false;
+
+  try {
+    range.surroundContents(span);
+    didApply = true;
+  } catch (err) {
+    console.warn('Selection could not be highlighted. Keep selections within a single paragraph.', err);
+  }
+
+  selection.removeAllRanges();
+  return didApply;
+}
+
+function clearHighlightsFromTarget(targetEl) {
+  const highlightedSpans = targetEl.querySelectorAll('.highlight-yellow, .highlight-green');
+  if (!highlightedSpans.length) {
+    window.getSelection()?.removeAllRanges();
+    return false;
+  }
+
+  highlightedSpans.forEach((span) => {
+    span.replaceWith(...span.childNodes);
+  });
+
+  window.getSelection()?.removeAllRanges();
+  return true;
+}
+
+function updateHighlightTexts() {
+  const t = STR[currentLang];
+  document.querySelectorAll('[data-i18n="highlightHeading"]').forEach((el) => (el.textContent = t.highlightHeading));
+  document.querySelectorAll('[data-i18n="highlightYellow"]').forEach((el) => (el.textContent = t.highlightYellow));
+  document.querySelectorAll('[data-i18n="highlightGreen"]').forEach((el) => (el.textContent = t.highlightGreen));
+  document.querySelectorAll('[data-i18n="clearHighlights"]').forEach((el) => (el.textContent = t.clearHighlights));
+
+  document.querySelectorAll('[data-highlight-action="yellow"]').forEach((btn) => btn.setAttribute('aria-label', t.highlightYellow));
+  document.querySelectorAll('[data-highlight-action="green"]').forEach((btn) => btn.setAttribute('aria-label', t.highlightGreen));
+  document.querySelectorAll('[data-highlight-action="clear"]').forEach((btn) => btn.setAttribute('aria-label', t.clearHighlights));
+
+  highlightToolbars.forEach((item) => item.updateToggleText?.());
+}
+
+function initHighlightTools() {
+  highlightToolbars.length = 0;
+
+  document.querySelectorAll('.highlight-toolbar').forEach((toolbar) => {
+    const targetId = toolbar.dataset.highlightTarget;
+    if (!targetId) return;
+
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+
+    targetEl.classList.add('highlight-surface');
+
+    const toggleButton = toolbar.querySelector('[data-highlight-action="toggle"]');
+    const toggleLabel = toggleButton?.querySelector('[data-i18n-toggle]') || null;
+
+    const updateToggleText = () => {
+      if (!toggleButton || !toggleLabel) return;
+      const hidden = targetEl.classList.contains('highlights-off');
+      const t = STR[currentLang];
+      toggleLabel.textContent = hidden ? t.showHighlights : t.hideHighlights;
+      toggleButton.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+      toggleButton.setAttribute('aria-label', hidden ? t.showHighlights : t.hideHighlights);
+    };
+
+    const applyColor = (button, className) => {
+      if (!button) return;
+      button.addEventListener('click', () => {
+        const applied = applyHighlightToTarget(targetEl, className);
+        if (applied && targetEl.classList.contains('highlights-off')) {
+          targetEl.classList.remove('highlights-off');
+        }
+        if (applied) {
+          updateToggleText();
+        }
+      });
+    };
+
+    applyColor(toolbar.querySelector('[data-highlight-action="yellow"]'), 'highlight-yellow');
+    applyColor(toolbar.querySelector('[data-highlight-action="green"]'), 'highlight-green');
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', () => {
+        targetEl.classList.toggle('highlights-off');
+        updateToggleText();
+      });
+    }
+
+    const clearButton = toolbar.querySelector('[data-highlight-action="clear"]');
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        clearHighlightsFromTarget(targetEl);
+        if (targetEl.classList.contains('highlights-off')) {
+          targetEl.classList.remove('highlights-off');
+        }
+        updateToggleText();
+      });
+    }
+
+    highlightToolbars.push({ toolbar, targetEl, toggleButton, toggleLabel, updateToggleText });
+    updateToggleText();
+  });
+
+  updateHighlightTexts();
+}
+
 /* ===================== Entry helpers ===================== */
 function initEasternTime() {
   const stampEl = document.getElementById('eastern-timestamp');
@@ -954,21 +1248,6 @@ function initEntryFieldProtections() {
   });
 }
 
-function initHighlightToggles() {
-  const toggles = document.querySelectorAll('.highlight-toggle');
-  toggles.forEach((toggle) => {
-    toggle.addEventListener('click', () => {
-      const targetId = toggle.dataset.target;
-      if (!targetId) return;
-      const targetEl = document.getElementById(targetId);
-      if (!targetEl) return;
-      const className = toggle.dataset.color === 'green' ? 'highlight-green' : 'highlight-yellow';
-      const isActive = targetEl.classList.toggle(className);
-      toggle.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-    });
-  });
-}
-
 function initStudentInfoControls() {
   const infoForm = document.getElementById('student-info');
   const firstNameInput = document.getElementById('student-first-name');
@@ -1003,9 +1282,9 @@ function initStudentInfoControls() {
 
 /* ===================== Init ===================== */
 document.addEventListener('DOMContentLoaded', ()=>{
+  initHighlightTools();
   setLang('en');
   initStudentInfoControls();
-  initHighlightToggles();
   initEntryFieldProtections();
   initEasternTime();
 });

@@ -63,7 +63,7 @@
   html[dir="rtl"] .highlight-btn{ flex-direction:row-reverse; }
   #submit-work-btn[disabled]{ cursor:not-allowed; }
   /* Manhattan map hotspots */
-  .hotspot{ position:absolute; border:2px solid rgba(59,130,246,.9); background:rgba(59,130,246,.12); border-radius:.5rem; cursor:pointer; outline:none; }
+  .hotspot{ position:absolute; border:2px solid rgba(59,130,246,.9); background:rgba(59,130,246,.12); border-radius:.5rem; cursor:pointer; outline:none; pointer-events:auto; box-sizing:border-box; }
   .hotspot::after{ content:""; position:absolute; inset:-6px; border:2px dashed rgba(59,130,246,.35); border-radius:.65rem; animation:pulse 1.8s ease-in-out infinite; }
   @keyframes pulse{ 0%{opacity:.7; transform:scale(1)} 50%{opacity:.2; transform:scale(1.03)} 100%{opacity:.7; transform:scale(1)} }
   /* Bubbles */
@@ -385,6 +385,7 @@
           <div id="source-c-material" class="highlight-surface prose prose-indigo bg-gray-50 p-4 rounded-lg border max-h-[600px] overflow-y-auto">
             <p><strong id="i-c-article-heading">SQ1: Featured Source C</strong></p>
             <p><strong id="i-c-article-title">Munsee Indians</strong></p>
+            <p id="i-c-caption" class="text-sm text-indigo-700 bg-indigo-100 border-l-4 border-indigo-300 px-3 py-2 rounded-r-md">Use this background to judge how the Munsee were treated after the Manhattan sale.</p>
             <p id="i-c-para-1"></p>
             <p id="i-c-para-2"></p>
             <p id="i-c-para-3"></p>
@@ -490,15 +491,16 @@
 
             <!-- Map + key -->
             <div class="grid grid-cols-1 gap-4">
-              <div>
+              <div id="d-map-frame" class="relative rounded-lg overflow-hidden border border-indigo-200 shadow-md">
                 <img id="wfn-map-nocounty"
                      src="https://wisconsinfirstnations.org/wp-content/themes/Revera/images/map/mapnoborder6.jpg"
                      alt="Tribal Lands map of Wisconsin without county lines"
-                     class="w-full h-auto block"/>
+                     class="w-full h-auto block select-none" draggable="false"/>
                 <img id="wfn-map-withcounty"
                      src="https://wisconsinfirstnations.org/wp-content/themes/Revera/images/map/mapwborder6.jpg"
                      alt="Tribal Lands map of Wisconsin with county lines and cities"
-                     class="w-full h-auto hidden"/>
+                     class="w-full h-auto hidden absolute inset-0 select-none" draggable="false"/>
+                <div id="d-map-wrap" class="absolute inset-0"></div>
               </div>
 
               <aside id="wfn-map-key" class="border p-4 rounded-md text-sm">
@@ -521,11 +523,9 @@
                 </p>
               </aside>
             </div>
+            <p id="i-d-tip" class="mt-3 text-sm text-gray-700">Click the glowing highlights to learn how this map supports the supporting question.</p>
             </section>
 
-            <p id="i-d-tip" class="mt-3 text-sm text-gray-700">
-              Open the interactive map. Look for “Stockbridge-Munsee Community”. Consider where Wisconsin is in relation to Manhattan.
-            </p>
             <a id="i-open-map" href="https://wisconsinfirstnations.org/map/" target="_blank" rel="noopener noreferrer"
                class="inline-block bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-colors no-underline">
               View Map in New Tab
@@ -639,7 +639,8 @@ const STR = {
     instructions:"Carefully examine each featured source. Select text with your mouse, then click a highlight color to mark important ideas. Type your answers directly into the boxes. Click any blue dotted word for a definition.",
     aContext:"This letter is basically the colony bragging to its bosses about buying Manhattan and shipping furs home. It lets you hear how Dutch leaders described the deal in their own words.",
     bContext:"This hand-drawn map shows the Dutch town decades after the sale, packed with walls, canals, and ships. Looking at it helps you picture what colonists prioritized on Manhattan.",
-    cContext:"This encyclopedia entry walks you through who the Munsee people were and what they endured after Europeans arrived. It gives you background so you can judge whether the sale truly helped them.",
+    cContext:"This short overview explains who the Munsee are and how colonization pushed them away from Manhattan.",
+    cCaption:"Use this background to judge how the Munsee were treated after the Manhattan sale.",
     dContext:"This modern Wisconsin map traces where Lenape descendants, including the Munsee, are living today. It’s a reminder of how far from Manhattan many families were pushed.",
     aBackgroundLabel:"Background:",
     aBackground:`This famous letter was sent to the governing assembly of the Dutch Republic, the <span class="tooltip-trigger" data-definition="The governing assembly (like a congress or parliament) of the Dutch Republic.">States General</span>. The Dutch West India Company ran the colony of New Netherland, and <span class="tooltip-trigger" data-pronunciation="PEE-ter YAHNS SHAH-gen" data-definition="A Dutch merchant and a director of the West India Company.">Pieter Jansz Schaghen</span> served on both the company board and the States General. He was also a merchant who traded grain, so he understood the grain samples he mentions. Schaghen wrote to share the exciting news that the colony, begun around 1624 after Henry Hudson explored the area in 1609, was growing and doing well.`,
@@ -663,10 +664,8 @@ const STR = {
     cArticleHeading:"SQ1: Featured Source C",
     cArticleTitle:"Munsee Indians",
     cArticleParagraphs:[
-      `The <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> were historically considered to be a part of the <span class="tooltip-trigger" data-pronunciation="DELL-uh-wair" data-definition="Also called the Lenape, an Indigenous people of the Northeastern Woodlands who lived in present-day New York, New Jersey, Pennsylvania, and Delaware.">Delaware</span>, or <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenape</span>, although they lived separately from the Delaware nation for most of their existence. Some scholars argue that the Munsee should not be considered Delaware because of stark differences in dialect. The United States referred to the Munsee as a separate tribe in the <span class="tooltip-trigger" data-definition="An 1805 agreement between the United States and several Native nations that ceded land along the south shore of Lake Erie.">Treaty of Fort Industry</span>.`,
-      `The Munsee were <span class="tooltip-trigger" data-pronunciation="al-GON-kwee-uhn" data-definition="Relating to a family of Indigenous languages and the peoples who speak them, stretching from the Atlantic Coast into the Great Lakes region.">Algonquian</span> natives. The Algonquian natives consisted of various tribes that spoke similar languages. The Munsee lived originally in New York and New Jersey, but they moved westward — first, to lands around the <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">Susquehanna</span>, and subsequently, to the lands around the <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">Ohio River</span>, where the rest of the Lenape had migrated — as <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">European settlers</span> forced them from the land.`,
-      `In the 1720s, substantial bands of the Munsee met <span class="tooltip-trigger" data-definition="Christian missionaries from the Moravian Church, a Protestant denomination with roots in Central Europe.">Moravian missionaries</span> in their settlements along the Susquehanna, and many converted to Christianity — these groups became known as the “<span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">Christian Munsee</span>” or “<span class="tooltip-trigger" data-definition="Another name for Christian Munsee communities connected to the Moravian Church.">Moravian Munsee</span>”; and many later emigrated to Fairfield/Moravianville, Ontario along the Thames. Portions of the Munsee subsequently moved to Wisconsin, or joined other Lenape in settling Kansas, and were compelled along with them into mid-19th century removals to <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">Indian Territory</span>, in present-day Oklahoma.`,
-      `Although the Munsee partnered with other tribes and were granted <span class="tooltip-trigger" data-definition="Official acknowledgement by the U.S. government that a Native nation exists as a sovereign entity with a government-to-government relationship.">federal recognition</span> and reservation lands from the mid-to-late 19th century, the <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">Dawes Act</span> effectively disbursed all remaining tribally held Munsee land to private families and ended federal recognition of the Munsee as such.`,
+      `The <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> are a Lenape band whose territory once stretched across Manhattan, the Hudson Valley, and northern New Jersey. As <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">European settlers</span> arrived, Munsee families were pushed off their homelands, first toward the <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">Susquehanna River</span> and later toward the <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">Ohio Country</span> alongside other <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenape</span>.`,
+      `By the early 1800s many Munsee joined “<span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">Christian Munsee</span>” settlements and were forced west again, this time into Wisconsin and later into <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">Indian Territory</span>. Federal laws such as the <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">Dawes Act</span> broke up their remaining lands, showing how little protection the Manhattan sale gave their homes or sovereignty.`,
     ],
     cArticleSource:`Source: “Munsee Indians.” <span class="tooltip-trigger" data-definition="An online encyclopedia of Ohio history created by the Ohio History Connection.">Ohio History Central</span>, Indiana University Press, 1996, <a class="text-indigo-600 hover:text-indigo-800" href="https://ohiohistorycentral.org/w/Munsee_Indians" target="_blank" rel="noopener noreferrer">https://ohiohistorycentral.org/w/Munsee_Indians</a>. Accessed 7 Oct. 2021.`,
     highlightHeading:"Highlights",
@@ -689,8 +688,13 @@ const STR = {
     mapTip:"Click the highlighted boxes to notice key features.",
     openFull:"Open full-size map in a new tab",
     dTitle:"Source D: “Map: Wisconsin First Nations”",
-    dTip:"Open the interactive map. Look for “Stockbridge-Munsee Community”. Consider where Wisconsin is in relation to Manhattan.",
+    dTip:"Click the glowing highlights to learn how this map supports the supporting question.",
     openMap:"View Map in New Tab",
+    dSpots:{
+      stockbridge:{title:"Stockbridge-Munsee Community",body:"The reservation for Munsee descendants sits in Wisconsin, far from their Manhattan homeland—evidence of forced relocation after the sale."},
+      menominee:{title:"Neighboring Menominee Lands",body:"The map shows Munsee families living alongside Menominee territory, highlighting how the Munsee had to join other nations to survive away from New York."},
+      distance:{title:"Distance from Manhattan",body:"Wisconsin is over 900 miles from Manhattan. Seeing the Munsee here underscores how the sale did not keep them near their original lands."}
+    },
     summaryTitle:"In Summary",
     summaryLabel:"Based on all four sources, answer the supporting question in 3–5 sentences.",
     R:"Restate", A:"Answer", C:"Cite Evidence", E:"Explain",
@@ -722,7 +726,8 @@ const STR = {
     instructions:"Examina atentamente cada fuente destacada. Selecciona el texto con el mouse y luego haz clic en un color para resaltar las ideas importantes. Escribe tus respuestas directamente en las casillas. Haz clic en cualquier palabra punteada en azul para ver la definición.",
     aContext:"Esta carta es la colonia presumiendo ante sus jefes de que compraron Manhattan y enviaron pieles a casa. Te permite escuchar cómo los líderes neerlandeses describieron el trato con sus propias palabras.",
     bContext:"Este mapa dibujado a mano muestra la ciudad neerlandesa décadas después de la venta, llena de murallas, canales y barcos. Al mirarlo puedes imaginar qué priorizaban los colonos en Manhattan.",
-    cContext:"Esta entrada enciclopédica te cuenta quiénes eran los Munsee y lo que vivieron tras la llegada europea. Te brinda contexto para decidir si la venta realmente les ayudó.",
+    cContext:"Esta síntesis explica quiénes son los Munsee y cómo la colonización los alejó de Manhattan.",
+    cCaption:"Utiliza esta síntesis para decidir si la venta benefició realmente a los Munsee.",
     dContext:"Este mapa moderno de Wisconsin sigue dónde viven hoy los descendientes lenape, incluidos los Munsee. Recuerda lo lejos de Manhattan que fueron empujadas muchas familias.",
     aBackgroundLabel:"Contexto:",
     aBackground:`Esta famosa carta fue enviada a la asamblea gobernante de la República Neerlandesa, los <span class="tooltip-trigger" data-definition="The governing assembly (like a congress or parliament) of the Dutch Republic.">Estados Generales</span>. La Compañía Neerlandesa de las Indias Occidentales administraba la colonia de Nueva Holanda, y <span class="tooltip-trigger" data-pronunciation="PEE-ter YAHNS SHAH-gen" data-definition="A Dutch merchant and a director of the West India Company.">Pieter Jansz Schaghen</span> servía tanto en la junta de la compañía como en los Estados Generales. También era comerciante de granos, así que comprendía las muestras de grano que menciona. Schaghen escribió para compartir la emocionante noticia de que la colonia, iniciada hacia 1624 después de que Henry Hudson explorara la zona en 1609, estaba creciendo y prosperando.`,
@@ -746,10 +751,8 @@ const STR = {
     cArticleHeading:"PG1: Fuente destacada C",
     cArticleTitle:"Indios Munsee",
     cArticleParagraphs:[
-      `Los <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> fueron considerados históricamente como parte de los <span class="tooltip-trigger" data-pronunciation="DELL-uh-wair" data-definition="Also called the Lenape, an Indigenous people of the Northeastern Woodlands who lived in present-day New York, New Jersey, Pennsylvania, and Delaware.">Delaware</span>, o <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenape</span>, aunque vivieron separados de la nación Delaware durante la mayor parte de su existencia. Algunos estudiosos sostienen que los Munsee no deberían considerarse Delaware debido a marcadas diferencias en el dialecto. Los Estados Unidos se refirieron a los Munsee como una tribu aparte en el <span class="tooltip-trigger" data-definition="An 1805 agreement between the United States and several Native nations that ceded land along the south shore of Lake Erie.">Tratado de Fort Industry</span>.`,
-      `Los Munsee eran nativos <span class="tooltip-trigger" data-pronunciation="al-GON-kwee-uhn" data-definition="Relating to a family of Indigenous languages and the peoples who speak them, stretching from the Atlantic Coast into the Great Lakes region.">algonquinos</span>. Los pueblos algonquinos estaban formados por diversas tribus que hablaban idiomas similares. Los Munsee vivían originalmente en Nueva York y Nueva Jersey, pero se desplazaron hacia el oeste —primero a tierras alrededor del <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">Susquehanna</span> y, posteriormente, a las tierras alrededor del <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">río Ohio</span>, adonde habían migrado los demás Lenape— cuando los <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">colonos europeos</span> los expulsaron de sus tierras.`,
-      `En la década de 1720, importantes bandas de los Munsee se encontraron con <span class="tooltip-trigger" data-definition="Christian missionaries from the Moravian Church, a Protestant denomination with roots in Central Europe.">misioneros moravos</span> en sus asentamientos a lo largo del Susquehanna y muchos se convirtieron al cristianismo; estos grupos llegaron a conocerse como los “<span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">Munsee cristianos</span>” o “<span class="tooltip-trigger" data-definition="Another name for Christian Munsee communities connected to the Moravian Church.">Munsee moravos</span>”, y muchos más tarde emigraron a Fairfield/Moravianville, Ontario, a orillas del río Támesis. Posteriormente, partes de los Munsee se mudaron a Wisconsin o se unieron a otros Lenape para establecerse en Kansas, y junto con ellos fueron forzados a las expulsiones de mediados del siglo XIX hacia el <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">Territorio Indio</span>, en la actual Oklahoma.`,
-      `Aunque los Munsee se aliaron con otras tribus y recibieron <span class="tooltip-trigger" data-definition="Official acknowledgement by the U.S. government that a Native nation exists as a sovereign entity with a government-to-government relationship.">reconocimiento federal</span> y tierras de reserva desde mediados hasta finales del siglo XIX, la <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">Ley Dawes</span> repartió en la práctica todas las tierras munsee que seguían siendo tribales entre familias particulares y puso fin al reconocimiento federal de los Munsee como tal.`,
+      `Los <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> son una banda lenape cuyo territorio abarcaba Manhattan, el valle del Hudson y el norte de Nueva Jersey. Con la llegada de los <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">colonos europeos</span>, las familias munsee fueron expulsadas primero hacia el <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">río Susquehanna</span> y más tarde hacia la región del <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">Ohio</span> junto con otros <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenape</span>.`,
+      `A principios de 1800 muchos Munsee se unieron a asentamientos de “<span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">Munsee cristianos</span>” y fueron obligados a desplazarse de nuevo, esta vez hacia Wisconsin y más tarde al <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">Territorio Indio</span>. Leyes federales como la <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">Ley Dawes</span> fragmentaron sus tierras restantes, lo que demuestra que la venta de Manhattan no protegió sus hogares ni su soberanía.`,
     ],
     cArticleSource:`Fuente: «Munsee Indians». <span class="tooltip-trigger" data-definition="An online encyclopedia of Ohio history created by the Ohio History Connection.">Ohio History Central</span>, Indiana University Press, 1996, <a class="text-indigo-600 hover:text-indigo-800" href="https://ohiohistorycentral.org/w/Munsee_Indians" target="_blank" rel="noopener noreferrer">https://ohiohistorycentral.org/w/Munsee_Indians</a>. Consultado el 7 de octubre de 2021.`,
     highlightHeading:"Resaltados",
@@ -772,8 +775,13 @@ const STR = {
     mapTip:"Haz clic en los recuadros resaltados para notar rasgos clave.",
     openFull:"Abrir el mapa en tamaño completo en otra pestaña",
     dTitle:"Fuente D: «Mapa: Wisconsin First Nations»",
-    dTip:"Abre el mapa interactivo. Busca “Stockbridge-Munsee Community”. Piensa dónde está Wisconsin en relación con Manhattan.",
+    dTip:"Haz clic en los resaltados brillantes para descubrir cómo este mapa respalda la pregunta guía.",
     openMap:"Abrir mapa en una pestaña nueva",
+    dSpots:{
+      stockbridge:{title:"Comunidad Stockbridge-Munsee",body:"La reserva de los descendientes munsee se ubica en Wisconsin, muy lejos de su hogar en Manhattan; evidencia el desplazamiento forzado tras la venta."},
+      menominee:{title:"Tierras menominee vecinas",body:"El mapa muestra a las familias munsee conviviendo junto al territorio menominee, lo que destaca cómo tuvieron que unirse a otras naciones para sobrevivir lejos de Nueva York."},
+      distance:{title:"Distancia a Manhattan",body:"Wisconsin está a más de 1,400 kilómetros de Manhattan. Ver a los munsee aquí subraya que la venta no los mantuvo cerca de sus tierras originales."}
+    },
     summaryTitle:"En resumen",
     summaryLabel:"Con base en las cuatro fuentes, responde la pregunta guía en 3–5 oraciones.",
     R:"Reformular", A:"Responder", C:"Citar evidencia", E:"Explicar",
@@ -804,7 +812,8 @@ const STR = {
     instructions:"Examinez attentivement chaque source proposée. Sélectionnez le texte avec votre souris puis cliquez sur une couleur pour surligner les idées importantes. Saisissez vos réponses directement dans les cases. Cliquez sur un mot en pointillé bleu pour afficher la définition.",
     aContext:"Cette lettre, c’est la colonie qui se vante auprès de ses chefs d’avoir acheté Manhattan et d’envoyer des fourrures. Elle te fait entendre comment les dirigeants néerlandais racontaient l’affaire avec leurs propres mots.",
     bContext:"Ce plan dessiné à la main montre la ville néerlandaise des décennies après la vente, pleine de remparts, de canaux et de navires. En le lisant, tu imagines ce que les colons mettaient en priorité à Manhattan.",
-    cContext:"Cet article encyclopédique t’explique qui étaient les Munsee et ce qu’ils ont enduré après l’arrivée des Européens. Il te donne le contexte pour juger si la vente leur a vraiment profité.",
+    cContext:"Cette synthèse explique qui sont les Munsee et comment la colonisation les a éloignés de Manhattan.",
+    cCaption:"Servez-vous de ce résumé pour juger si la vente a vraiment profité aux Munsee.",
     dContext:"Cette carte moderne du Wisconsin retrace où vivent aujourd’hui les descendants lenape, dont les Munsee. Elle rappelle à quel point beaucoup de familles ont été éloignées de Manhattan.",
     aBackgroundLabel:"Contexte :",
     aBackground:`Cette lettre célèbre a été envoyée à l’assemblée dirigeante de la République des Provinces-Unies, les <span class="tooltip-trigger" data-definition="The governing assembly (like a congress or parliament) of the Dutch Republic.">États généraux</span>. La Compagnie néerlandaise des Indes occidentales gérait la colonie de la Nouvelle-Néerlande, et <span class="tooltip-trigger" data-pronunciation="PEE-ter YAHNS SHAH-gen" data-definition="A Dutch merchant and a director of the West India Company.">Pieter Jansz Schaghen</span> siégeait à la fois au conseil de la compagnie et aux États généraux. Il était aussi marchand de grains, ce qui lui permettait de comprendre les échantillons qu’il mentionne. Schaghen écrivait pour annoncer que la colonie, fondée vers 1624 après l’exploration de Henry Hudson en 1609, grandissait et se portait bien.`,
@@ -828,10 +837,8 @@ const STR = {
     cArticleHeading:"QD1 : Source vedette C",
     cArticleTitle:"Les Munsee",
     cArticleParagraphs:[
-      `Les <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> étaient historiquement considérés comme faisant partie des <span class="tooltip-trigger" data-pronunciation="DELL-uh-wair" data-definition="Also called the Lenape, an Indigenous people of the Northeastern Woodlands who lived in present-day New York, New Jersey, Pennsylvania, and Delaware.">Delaware</span>, ou <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenape</span>, bien qu’ils aient vécu séparés de la nation delaware pendant la plus grande partie de leur histoire. Certains chercheurs estiment que les Munsee ne devraient pas être considérés comme des Delaware en raison de fortes différences de dialecte. Les États-Unis ont désigné les Munsee comme une tribu distincte dans le <span class="tooltip-trigger" data-definition="An 1805 agreement between the United States and several Native nations that ceded land along the south shore of Lake Erie.">traité de Fort Industry</span>.`,
-      `Les Munsee étaient des Autochtones <span class="tooltip-trigger" data-pronunciation="al-GON-kwee-uhn" data-definition="Relating to a family of Indigenous languages and the peoples who speak them, stretching from the Atlantic Coast into the Great Lakes region.">algonquiens</span>. Les peuples algonquiens rassemblaient diverses tribus parlant des langues proches. Les Munsee vivaient à l’origine dans l’État de New York et au New Jersey, mais ils se sont déplacés vers l’ouest — d’abord vers les terres autour de la <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">Susquehanna</span>, puis vers celles autour du <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">fleuve Ohio</span>, où le reste des Lenape avait migré — quand les <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">colons européens</span> les ont chassés de leurs terres.`,
-      `Dans les années 1720, d’importants groupes munsee ont rencontré des <span class="tooltip-trigger" data-definition="Christian missionaries from the Moravian Church, a Protestant denomination with roots in Central Europe.">missionnaires moraves</span> dans leurs villages le long de la Susquehanna, et beaucoup se sont convertis au christianisme : ces groupes ont été appelés les « <span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">Munsee chrétiens</span> » ou « <span class="tooltip-trigger" data-definition="Another name for Christian Munsee communities connected to the Moravian Church.">Munsee moraves</span> », et nombre d’entre eux ont ensuite émigré vers Fairfield/Moravianville, en Ontario, le long de la Thames. Certaines communautés munsee ont ensuite déménagé au Wisconsin ou ont rejoint d’autres Lenape au Kansas, avant d’être, avec eux, contraintes aux déplacements du milieu du XIXᵉ siècle vers le <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">Territoire indien</span>, dans l’actuel Oklahoma.`,
-      `Même si les Munsee se sont alliés à d’autres tribus et ont obtenu le <span class="tooltip-trigger" data-definition="Official acknowledgement by the U.S. government that a Native nation exists as a sovereign entity with a government-to-government relationship.">reconnaissance fédérale</span> et des terres de réserve entre le milieu et la fin du XIXᵉ siècle, la <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">loi Dawes</span> a fini par distribuer toutes les terres munsee restantes à des familles privées et a mis fin à la reconnaissance fédérale des Munsee en tant que nation.`,
+      `Les <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">Munsee</span> sont une bande lenape dont le territoire couvrait autrefois Manhattan, la vallée de l’Hudson et le nord du New Jersey. Avec l’arrivée des <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">colons européens</span>, les familles munsee furent repoussées hors de leurs terres, d’abord vers la <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">rivière Susquehanna</span>, puis vers la <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">région de l’Ohio</span> aux côtés d’autres <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">Lenapes</span>.`,
+      `Au début des années 1800, de nombreux Munsee rejoignirent des communautés de « <span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">Munsee chrétiens</span> » et furent de nouveau déplacés, cette fois vers le Wisconsin puis vers le <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">Territoire indien</span>. Des lois fédérales comme la <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">loi Dawes</span> morcelèrent leurs terres restantes, montrant que la vente de Manhattan n’a pas protégé leurs foyers ni leur souveraineté.`,
     ],
     cArticleSource:`Source : « Munsee Indians ». <span class="tooltip-trigger" data-definition="An online encyclopedia of Ohio history created by the Ohio History Connection.">Ohio History Central</span>, Indiana University Press, 1996, <a class="text-indigo-600 hover:text-indigo-800" href="https://ohiohistorycentral.org/w/Munsee_Indians" target="_blank" rel="noopener noreferrer">https://ohiohistorycentral.org/w/Munsee_Indians</a>. Consulté le 7 octobre 2021.`,
     highlightHeading:"Surlignages",
@@ -854,8 +861,13 @@ const STR = {
     mapTip:"Cliquez sur les encadrés pour observer les éléments clés.",
     openFull:"Ouvrir la carte en grand format dans un nouvel onglet",
     dTitle:"Source D : « Carte : Wisconsin First Nations »",
-    dTip:"Ouvrez la carte interactive. Cherchez « Stockbridge-Munsee Community ». Situez le Wisconsin par rapport à Manhattan.",
+    dTip:"Cliquez sur les zones lumineuses pour comprendre comment cette carte soutient la question directrice.",
     openMap:"Ouvrir la carte dans un nouvel onglet",
+    dSpots:{
+      stockbridge:{title:"Communauté Stockbridge-Munsee",body:"La réserve des descendants munsee se situe au Wisconsin, loin de leur patrie de Manhattan — une preuve du déplacement forcé après la vente."},
+      menominee:{title:"Territoires menominee voisins",body:"La carte montre des familles munsee vivant à côté des terres menominee, soulignant qu’ils ont dû se joindre à d’autres nations pour survivre loin de New York."},
+      distance:{title:"Distance avec Manhattan",body:"Le Wisconsin se trouve à plus de 1 400 km de Manhattan. Voir les Munsee ici rappelle que la vente ne les a pas maintenus près de leurs terres d’origine."}
+    },
     summaryTitle:"En résumé",
     summaryLabel:"À partir des quatre sources, répondez en 3–5 phrases.",
     R:"Reformuler", A:"Répondre", C:"Citer des preuves", E:"Expliquer",
@@ -886,7 +898,8 @@ const STR = {
     instructions:"افحص كل مصدر بعناية. ظلل النص بالفأرة ثم اضغط زر اللون لتظليل الأفكار المهمة. اكتب إجاباتك مباشرة في الخانات. اضغط على الكلمات ذات النقاط الزرقاء لعرض التعريف.",
     aContext:"هذه الرسالة تشبه مستعمرة تتفاخر أمام رؤسائها بأنها اشترت مانهاتن وترسل الفراء إلى الوطن. تتيح لك سماع كيف وصف القادة الهولنديون الصفقة بكلماتهم.",
     bContext:"تُظهر هذه الخريطة المرسومة يدويًا البلدة الهولندية بعد عقود من البيع، مليئة بالأسوار والقنوات والسفن. عندما تتأملها تتخيل ما كان المستوطنون يعتبرونه أولوية في مانهاتن.",
-    cContext:"يُعرّفك هذا المقال الموسوعي على شعب المونسي وما واجهوه بعد وصول الأوروبيين. يمنحك سياقًا يساعدك على تقييم ما إذا كانت الصفقة قد أفادتهم حقًا.",
+    cContext:"يلخّص هذا العرض من هم المونسي وكيف أبعدهم الاستعمار عن مانهاتن.",
+    cCaption:"استخدم هذه الخلفية لتقرر ما إذا كانت الصفقة قد أفادت المونسي فعلاً.",
     dContext:"تتبع هذه الخريطة الحديثة لولاية ويسكونسن أماكن عيش أحفاد اللينابي اليوم، ومن بينهم المونسي. إنها تذكير بمدى بُعد الكثير من العائلات عن مانهاتن.",
     aBackgroundLabel:"خلفية:",
     aBackground:`أُرسلت هذه الرسالة الشهيرة إلى الهيئة الحاكمة للجمهورية الهولندية، <span class="tooltip-trigger" data-definition="The governing assembly (like a congress or parliament) of the Dutch Republic.">States General</span>. كانت شركة الهند الغربية الهولندية تدير مستعمرة نيو نذرلاند، وكان <span class="tooltip-trigger" data-pronunciation="PEE-ter YAHNS SHAH-gen" data-definition="A Dutch merchant and a director of the West India Company.">Pieter Jansz Schaghen</span> يخدم في مجلس إدارة الشركة وفي States General. وكان تاجر حبوب، لذا فهم عينات الحبوب التي يذكرها. كتب شاغين ليشارك الأخبار السارة بأن المستعمرة، التي بدأت نحو عام 1624 بعد أن استكشف هنري هدسون المنطقة عام 1609، كانت تنمو وتزدهر.`,
@@ -910,10 +923,8 @@ const STR = {
     cArticleHeading:"سؤال داعم 1: المصدر المميز ج",
     cArticleTitle:"شعب المونسي",
     cArticleParagraphs:[
-      `كان <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">المونسي</span> يُعَدّون تاريخيًا جزءًا من <span class="tooltip-trigger" data-pronunciation="DELL-uh-wair" data-definition="Also called the Lenape, an Indigenous people of the Northeastern Woodlands who lived in present-day New York, New Jersey, Pennsylvania, and Delaware.">الدلاوير</span> أو <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">اللنابي</span>، رغم أنهم عاشوا منفصلين عن أمة الدلاوير معظم تاريخهم. يجادل بعض الباحثين بأن المونسي لا ينبغي اعتبارهم من الدلاوير بسبب الفروق الواضحة في اللهجات. أشارت الولايات المتحدة إلى المونسي كقبيلة منفصلة في <span class="tooltip-trigger" data-definition="An 1805 agreement between the United States and several Native nations that ceded land along the south shore of Lake Erie.">معاهدة فورت إندستري</span>.`,
-      `كان المونسي من السكان الأصليين <span class="tooltip-trigger" data-pronunciation="al-GON-kwee-uhn" data-definition="Relating to a family of Indigenous languages and the peoples who speak them, stretching from the Atlantic Coast into the Great Lakes region.">الناطقين بالألغونكية</span>. وكانت الشعوب الألغونكية تضم قبائل متعددة تتحدث لغات متقاربة. عاش المونسي في الأصل في نيويورك ونيوجيرسي، لكنهم تحركوا غربًا—أولًا إلى أراضٍ حول <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">نهر سسكويهانا</span>، ثم إلى الأراضي حول <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">نهر أوهايو</span>، حيث كان بقية اللنابي قد هاجروا—إذ أجبرهم <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">المستوطنون الأوروبيون</span> على ترك أراضيهم.`,
-      `في عشرينيات القرن الثامن عشر التقى عدد كبير من جماعات المونسي بـ<span class="tooltip-trigger" data-definition="Christian missionaries from the Moravian Church, a Protestant denomination with roots in Central Europe.">مبشرين مورافيين</span> في مستوطناتهم على طول السسكويهانا، واعتنق الكثيرون المسيحية؛ وأصبح يُطلق على هذه المجموعات «<span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">المونسي المسيحيون</span>» أو «<span class="tooltip-trigger" data-definition="Another name for Christian Munsee communities connected to the Moravian Church.">المونسي المورافيون</span>»، ثم هاجر كثيرون لاحقًا إلى فيرفيلد/مورافيانويل في أونتاريو على نهر التايمز. بعد ذلك انتقلت أجزاء من المونسي إلى ويسكونسن أو انضمت إلى لنابي آخرين للاستقرار في كانساس، ثم أُجبروا معهم على موجات الإبعاد في منتصف القرن التاسع عشر إلى <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">الإقليم الهندي</span> في ولاية أوكلاهوما الحالية.`,
-      `على الرغم من أن المونسي تحالفوا مع قبائل أخرى وحصلوا على <span class="tooltip-trigger" data-definition="Official acknowledgement by the U.S. government that a Native nation exists as a sovereign entity with a government-to-government relationship.">اعتراف اتحادي</span> وأراضي للحجز منذ منتصف القرن التاسع عشر وحتى أواخره، فإن <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">قانون داوز</span> فرّق فعليًا ما تبقى من أراضي المونسي الجماعية بين عائلات خاصة وأنهى الاعتراف الاتحادي بالمونسي كأمة.`,
+      `يشكّل <span class="tooltip-trigger" data-pronunciation="MUN-see" data-definition="A band of Lenape people whose homelands included what is now the Hudson River Valley and northern New Jersey.">المونسي</span> فرعًا من شعب <span class="tooltip-trigger" data-pronunciation="leh-NAH-pay" data-definition="Self-name of the Delaware people, an Algonquian-speaking Indigenous nation.">اللنابي</span>، وكانت أراضيهم تمتد إلى مانهاتن ووادي هدسون وشمال نيوجيرسي. مع وصول <span class="tooltip-trigger" data-definition="Colonists from Europe who settled Indigenous lands in North America.">المستوطنين الأوروبيين</span> دُفعت عائلات المونسي بعيدًا عن موطنها، أولًا باتجاه <span class="tooltip-trigger" data-pronunciation="suss-kweh-HAN-uh" data-definition="A major river flowing from New York through Pennsylvania into the Chesapeake Bay.">نهر سسكويهانا</span> ثم نحو منطقة <span class="tooltip-trigger" data-definition="A major river that runs from Pennsylvania to Illinois before joining the Mississippi River.">الأوهايو</span> جنبًا إلى جنب مع لنابي آخرين.`,
+      `في أوائل القرن التاسع عشر انضم كثير من المونسي إلى جماعات «<span class="tooltip-trigger" data-definition="Munsee Lenape people who adopted Christianity through Moravian missionary work.">المونسي المسيحيون</span>» وتعرّضوا لتهجير جديد، وهذه المرة إلى ويسكونسن ولاحقًا إلى <span class="tooltip-trigger" data-definition="Historical term the U.S. government used for lands in present-day Oklahoma that Native nations were forced to occupy after removal.">الإقليم الهندي</span>. كما جزأت قوانين اتحادية مثل <span class="tooltip-trigger" data-definition="An 1887 U.S. law that divided communal Native lands into individual allotments and opened “surplus” land to settlers.">قانون دوز</span> ما تبقى لهم من أراضٍ، ما يوضح أن بيع مانهاتن لم يحفظ مساكنهم ولا سيادتهم.`,
     ],
     cArticleSource:`المصدر: «Munsee Indians». <span class="tooltip-trigger" data-definition="An online encyclopedia of Ohio history created by the Ohio History Connection.">Ohio History Central</span>، مطبعة جامعة إنديانا، 1996، <a class="text-indigo-600 hover:text-indigo-800" href="https://ohiohistorycentral.org/w/Munsee_Indians" target="_blank" rel="noopener noreferrer">https://ohiohistorycentral.org/w/Munsee_Indians</a>. تاريخ الاطلاع: 7 تشرين الأول/أكتوبر 2021.`,
     highlightHeading:"التظليلات",
@@ -936,8 +947,13 @@ const STR = {
     mapTip:"اضغط على المربعات المظللة لملاحظة السمات المهمة.",
     openFull:"افتح الخريطة بالحجم الكامل في لسان جديد",
     dTitle:"المصدر د: «خريطة: أمم ويسكونسن الأولى»",
-    dTip:"افتح الخريطة التفاعلية. ابحث عن «Stockbridge-Munsee Community». حدّد موقع ويسكونسن نسبةً إلى مانهاتن.",
+    dTip:"انقر على المناطق المضيئة لتعرف كيف تدعم هذه الخريطة السؤال الداعم.",
     openMap:"فتح الخريطة في لسان جديد",
+    dSpots:{
+      stockbridge:{title:"مجتمع ستوكبريدج-مونسي",body:"تقع محمية أحفاد المونسي في ويسكونسن بعيدًا جدًا عن موطنهم في مانهاتن، وهو دليل على التهجير بعد الصفقة."},
+      menominee:{title:"أراضٍ منومية مجاورة",body:"تُظهر الخريطة عائلات المونسي وهي تعيش بمحاذاة أراضي منومية، ما يبرز أنهم اضطروا للاتحاد مع أمم أخرى كي يبقوا بعيدًا عن نيويورك."},
+      distance:{title:"البعد عن مانهاتن",body:"تبعد ويسكونسن أكثر من ١٤٠٠ كيلومتر عن مانهاتن، ورؤية المونسي هنا تؤكد أن البيع لم يُبقهم قريبين من أراضيهم الأصلية."}
+    },
     summaryTitle:"الخلاصة",
     summaryLabel:"استنادًا إلى المصادر الأربعة، أجب في 3–5 جمل.",
     R:"إعادة الصياغة", A:"الإجابة", C:"الاستشهاد", E:"الشرح",
@@ -970,6 +986,12 @@ const CALLOUTS = [
   { id:"harbor",   top:88.0, left:18.0, width:55.0, height:10.0 }
 ];
 
+const D_CALLOUTS = [
+  { id:"stockbridge", top:30.0, left:64.0, width:18.0, height:18.0 },
+  { id:"menominee",   top:18.0, left:48.0, width:24.0, height:22.0 },
+  { id:"distance",    top:62.0, left:38.0, width:30.0, height:30.0 }
+];
+
 /* ===================== Runtime wiring ===================== */
 const qs = (s)=>document.querySelector(s);
 const langSel = qs('#lang');
@@ -1000,6 +1022,8 @@ function setLang(code){
   if (cHeading) cHeading.textContent = t.cArticleHeading;
   const cTitle = qs('#i-c-article-title');
   if (cTitle) cTitle.textContent = t.cArticleTitle;
+  const cCaption = qs('#i-c-caption');
+  if (cCaption) cCaption.textContent = t.cCaption || '';
   const cParagraphSelectors = ['#i-c-para-1', '#i-c-para-2', '#i-c-para-3', '#i-c-para-4'];
   cParagraphSelectors.forEach((sel, idx) => {
     const el = qs(sel);
@@ -1078,6 +1102,7 @@ function setLang(code){
   updateHighlightTexts();
 
   // Close any open bubbles
+  buildAllHotspots();
   closeMapBubble(); closeGlossary();
 }
 
@@ -1086,22 +1111,36 @@ langSel.addEventListener('change', e=>setLang(e.target.value));
 /* ===================== Manhattan Map hotspots ===================== */
 const mapWrap = document.getElementById('mapWrap');
 const mapImg = document.getElementById('mapImg');
-let hotspotEls = [];
+const dMapWrap = document.getElementById('d-map-wrap');
+const dMapImg = document.getElementById('wfn-map-nocounty');
 
-function buildHotspots(){
-  hotspotEls.forEach(h=>h.remove()); hotspotEls=[];
-  CALLOUTS.forEach(c=>{
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'hotspot';
-    btn.style.top    = c.top+'%';
-    btn.style.left   = c.left+'%';
-    btn.style.width  = c.width+'%';
-    btn.style.height = c.height+'%';
-    btn.dataset.id = c.id;
-    btn.addEventListener('click', (e)=>{ e.stopPropagation(); openMapBubble(btn); });
-    mapWrap.appendChild(btn);
-    hotspotEls.push(btn);
+const HOTSPOT_GROUPS = [
+  { wrap: mapWrap, img: mapImg, callouts: CALLOUTS, strKey: 'spots', elements: [] },
+  { wrap: dMapWrap, img: dMapImg, callouts: D_CALLOUTS, strKey: 'dSpots', elements: [] }
+];
+
+function buildAllHotspots(){
+  HOTSPOT_GROUPS.forEach(group=>{
+    if (!group.wrap) return;
+    group.elements.forEach(el=>el.remove());
+    group.elements = [];
+    const dict = STR[currentLang]?.[group.strKey] || {};
+    group.callouts.forEach(c=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hotspot';
+      btn.style.top    = c.top+'%';
+      btn.style.left   = c.left+'%';
+      btn.style.width  = c.width+'%';
+      btn.style.height = c.height+'%';
+      btn.dataset.key = group.strKey;
+      btn.dataset.id = c.id;
+      const label = dict[c.id]?.title;
+      if (label) btn.setAttribute('aria-label', label);
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); openMapBubble(btn); });
+      group.wrap.appendChild(btn);
+      group.elements.push(btn);
+    });
   });
 }
 
@@ -1110,7 +1149,10 @@ const mbTitle   = document.getElementById('mb-title');
 const mbBody    = document.getElementById('mb-body');
 
 function openMapBubble(btn){
-  const t = STR[currentLang].spots[btn.dataset.id];
+  const groupKey = btn.dataset.key || 'spots';
+  const dict = STR[currentLang]?.[groupKey] || {};
+  const t = dict[btn.dataset.id];
+  if (!t) return;
   mbTitle.textContent = t.title; mbBody.textContent = t.body;
 
   mapBubble.style.display='block';
@@ -1144,7 +1186,11 @@ document.getElementById('map-bubble-close').addEventListener('click', (e)=>{ e.s
 document.addEventListener('click', (e)=>{ if(!mapBubble.contains(e.target)) closeMapBubble(); });
 addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMapBubble(); });
 
-if (mapImg.complete) buildHotspots(); else mapImg.onload = buildHotspots;
+HOTSPOT_GROUPS.forEach(group=>{
+  if (!group.img) return;
+  if (group.img.complete) buildAllHotspots();
+  else group.img.addEventListener('load', buildAllHotspots);
+});
 addEventListener('resize', ()=>{ closeMapBubble(); });
 
 /* ===================== Glossary tooltip ===================== */

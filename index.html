@@ -156,9 +156,12 @@
 
     <!-- SOURCE A -->
     <section class="mb-16">
-      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-indigo-200" id="i-a-title">
+      <h3 class="text-2xl font-bold text-gray-800 mb-3 pb-3 border-b-2 border-indigo-200" id="i-a-title">
         Source A: Pieter Jansz Schaghen, “The Schaghen Letter,” 1626
       </h3>
+      <p id="i-a-context" class="text-base text-gray-700 mb-6">
+        This letter is basically the colony bragging to its bosses about buying Manhattan and shipping furs home. It lets you hear how Dutch leaders described the deal in their own words.
+      </p>
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material">Source Material</h4>
@@ -256,9 +259,12 @@
 
     <!-- SOURCE B: Manhattan Map (no click-to-enlarge; separate link provided) -->
     <section class="mb-16">
-      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-indigo-200" id="i-b-title">
+      <h3 class="text-2xl font-bold text-gray-800 mb-3 pb-3 border-b-2 border-indigo-200" id="i-b-title">
         Source B: Map of New Amsterdam, 1660 (Castello Plan)
       </h3>
+      <p id="i-b-context" class="text-base text-gray-700 mb-6">
+        This hand-drawn map shows the Dutch town decades after the sale, packed with walls, canals, and ships. Looking at it helps you picture what colonists prioritized on Manhattan.
+      </p>
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material-2">Source Material</h4>
@@ -352,9 +358,12 @@
 
     <!-- SOURCE C -->
     <section class="mb-16">
-      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-indigo-200" id="i-c-title">
+      <h3 class="text-2xl font-bold text-gray-800 mb-3 pb-3 border-b-2 border-indigo-200" id="i-c-title">
         Source C: “Munsee Indians,” Ohio History Central
       </h3>
+      <p id="i-c-context" class="text-base text-gray-700 mb-6">
+        This encyclopedia entry walks you through who the Munsee people were and what they endured after Europeans arrived. It gives you background so you can judge whether the sale truly helped them.
+      </p>
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material-3">Source Material</h4>
@@ -438,9 +447,12 @@
 
     <!-- SOURCE D: Wisconsin First Nations (integrated embed with toggle) -->
     <section class="mb-16" id="wfn">
-      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-indigo-200" id="i-d-title">
+      <h3 class="text-2xl font-bold text-gray-800 mb-3 pb-3 border-b-2 border-indigo-200" id="i-d-title">
         Source D: “Map: Wisconsin First Nations”
       </h3>
+      <p id="i-d-context" class="text-base text-gray-700 mb-6">
+        This modern Wisconsin map traces where Lenape descendants, including the Munsee, are living today. It’s a reminder of how far from Manhattan many families were pushed.
+      </p>
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
         <div class="mb-6 lg:mb-0">
           <h4 class="text-lg font-semibold text-gray-700 mb-3" id="i-source-material-4">Source Material</h4>
@@ -642,6 +654,10 @@ const STR = {
     sqTitle:"Supporting Question 1:",
     sqBody:"Did the Munsee Lenape band of Algonquin benefit from the sale of Manhattan Island?",
     instructions:"Carefully examine each featured source. Select text with your mouse, then click a highlight color to mark important ideas. Type your answers directly into the boxes. Click any blue dotted word for a definition.",
+    aContext:"This letter is basically the colony bragging to its bosses about buying Manhattan and shipping furs home. It lets you hear how Dutch leaders described the deal in their own words.",
+    bContext:"This hand-drawn map shows the Dutch town decades after the sale, packed with walls, canals, and ships. Looking at it helps you picture what colonists prioritized on Manhattan.",
+    cContext:"This encyclopedia entry walks you through who the Munsee people were and what they endured after Europeans arrived. It gives you background so you can judge whether the sale truly helped them.",
+    dContext:"This modern Wisconsin map traces where Lenape descendants, including the Munsee, are living today. It’s a reminder of how far from Manhattan many families were pushed.",
     highlightHeading:"Highlights",
     highlightYellow:"Highlight Yellow",
     highlightGreen:"Highlight Green",
@@ -693,6 +709,10 @@ const STR = {
     sqTitle:"Pregunta guía 1:",
     sqBody:"¿Se benefició la banda Munsee Lenape de la venta de la isla de Manhattan?",
     instructions:"Examina atentamente cada fuente destacada. Selecciona el texto con el mouse y luego haz clic en un color para resaltar las ideas importantes. Escribe tus respuestas directamente en las casillas. Haz clic en cualquier palabra punteada en azul para ver la definición.",
+    aContext:"Esta carta es la colonia presumiendo ante sus jefes de que compraron Manhattan y enviaron pieles a casa. Te permite escuchar cómo los líderes neerlandeses describieron el trato con sus propias palabras.",
+    bContext:"Este mapa dibujado a mano muestra la ciudad neerlandesa décadas después de la venta, llena de murallas, canales y barcos. Al mirarlo puedes imaginar qué priorizaban los colonos en Manhattan.",
+    cContext:"Esta entrada enciclopédica te cuenta quiénes eran los Munsee y lo que vivieron tras la llegada europea. Te brinda contexto para decidir si la venta realmente les ayudó.",
+    dContext:"Este mapa moderno de Wisconsin sigue dónde viven hoy los descendientes lenape, incluidos los Munsee. Recuerda lo lejos de Manhattan que fueron empujadas muchas familias.",
     highlightHeading:"Resaltados",
     highlightYellow:"Resaltar en amarillo",
     highlightGreen:"Resaltar en verde",
@@ -743,6 +763,10 @@ const STR = {
     sqTitle:"Question directrice 1 :",
     sqBody:"La bande munsee lenape a-t-elle profité de la vente de Manhattan ?",
     instructions:"Examinez attentivement chaque source proposée. Sélectionnez le texte avec votre souris puis cliquez sur une couleur pour surligner les idées importantes. Saisissez vos réponses directement dans les cases. Cliquez sur un mot en pointillé bleu pour afficher la définition.",
+    aContext:"Cette lettre, c’est la colonie qui se vante auprès de ses chefs d’avoir acheté Manhattan et d’envoyer des fourrures. Elle te fait entendre comment les dirigeants néerlandais racontaient l’affaire avec leurs propres mots.",
+    bContext:"Ce plan dessiné à la main montre la ville néerlandaise des décennies après la vente, pleine de remparts, de canaux et de navires. En le lisant, tu imagines ce que les colons mettaient en priorité à Manhattan.",
+    cContext:"Cet article encyclopédique t’explique qui étaient les Munsee et ce qu’ils ont enduré après l’arrivée des Européens. Il te donne le contexte pour juger si la vente leur a vraiment profité.",
+    dContext:"Cette carte moderne du Wisconsin retrace où vivent aujourd’hui les descendants lenape, dont les Munsee. Elle rappelle à quel point beaucoup de familles ont été éloignées de Manhattan.",
     highlightHeading:"Surlignages",
     highlightYellow:"Surligner en jaune",
     highlightGreen:"Surligner en vert",
@@ -793,6 +817,10 @@ const STR = {
     sqTitle:"سؤال داعم 1:",
     sqBody:"هل استفادت جماعة المونسي من شعب لنابي من بيع جزيرة مانهاتن؟",
     instructions:"افحص كل مصدر بعناية. ظلل النص بالفأرة ثم اضغط زر اللون لتظليل الأفكار المهمة. اكتب إجاباتك مباشرة في الخانات. اضغط على الكلمات ذات النقاط الزرقاء لعرض التعريف.",
+    aContext:"هذه الرسالة تشبه مستعمرة تتفاخر أمام رؤسائها بأنها اشترت مانهاتن وترسل الفراء إلى الوطن. تتيح لك سماع كيف وصف القادة الهولنديون الصفقة بكلماتهم.",
+    bContext:"تُظهر هذه الخريطة المرسومة يدويًا البلدة الهولندية بعد عقود من البيع، مليئة بالأسوار والقنوات والسفن. عندما تتأملها تتخيل ما كان المستوطنون يعتبرونه أولوية في مانهاتن.",
+    cContext:"يُعرّفك هذا المقال الموسوعي على شعب المونسي وما واجهوه بعد وصول الأوروبيين. يمنحك سياقًا يساعدك على تقييم ما إذا كانت الصفقة قد أفادتهم حقًا.",
+    dContext:"تتبع هذه الخريطة الحديثة لولاية ويسكونسن أماكن عيش أحفاد اللينابي اليوم، ومن بينهم المونسي. إنها تذكير بمدى بُعد الكثير من العائلات عن مانهاتن.",
     highlightHeading:"التظليلات",
     highlightYellow:"تظليل بالأصفر",
     highlightGreen:"تظليل بالأخضر",
@@ -864,6 +892,10 @@ function setLang(code){
   qs('#i-sq-title').textContent = t.sqTitle;
   qs('#i-sq-body').textContent = t.sqBody;
   qs('#i-instructions').textContent = t.instructions;
+  qs('#i-a-context').textContent = t.aContext;
+  qs('#i-b-context').textContent = t.bContext;
+  qs('#i-c-context').textContent = t.cContext;
+  qs('#i-d-context').textContent = t.dContext;
 
   // A labels
   qs('#i-source-material').textContent = t.sourceMaterial;

@@ -54,7 +54,7 @@
             <option value="ar">العربية</option>
           </select>
         </div>
-        <button id="submit-work-btn" type="button" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none" data-form-url="" disabled aria-disabled="true">
+        <button id="submit-work-btn" type="button" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none" disabled aria-disabled="true">
           <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16.5V21h4.5M20 7l-8.5 8.5m0 0L9 21l5.5-2.5m-3-3L3 9l5-5 8.5 8.5" />
           </svg>
@@ -151,21 +151,21 @@
                   <span id="i-sourcing">Sourcing</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-sourcing-help">(author, purpose, date/location)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="a-sourcing" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-cite">Cite Evidence</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-cite-help">(key details, quotes)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="a-cite" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-bias">Bias / Insight</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-bias-help">(perspective, what's missing?)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="a-bias" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
             </tbody>
           </table>
@@ -220,21 +220,21 @@
                   <span id="i-sourcing-2">Sourcing</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-sourcing-help-2">(author, purpose, date/location)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="b-sourcing" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-cite-2">Cite Evidence</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-cite-help-2">(key details, features)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="b-cite" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-bias-2">Bias / Insight</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-bias-help-2">(perspective, what's missing?)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="b-bias" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
             </tbody>
           </table>
@@ -279,21 +279,21 @@
                   <span id="i-sourcing-3">Sourcing</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-sourcing-help-3">(author, purpose, date/location)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="c-sourcing" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-cite-3">Cite Evidence</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-cite-help-3">(key details, quotes)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="c-cite" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-bias-3">Bias / Insight</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-bias-help-3">(perspective, what's missing?)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="c-bias" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
             </tbody>
           </table>
@@ -390,21 +390,21 @@
                   <span id="i-sourcing-4">Sourcing</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-sourcing-help-4">(author, purpose, date/location)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="d-sourcing" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-cite-4">Cite Evidence</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-cite-help-4">(key details, features)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="d-cite" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
               <tr>
                 <td class="px-6 py-4 align-top font-semibold text-gray-800">
                   <span id="i-bias-4">Bias / Insight</span>
                   <p class="text-sm font-normal text-gray-600 mt-1" id="i-bias-help-4">(perspective, what's missing?)</p>
                 </td>
-                <td class="px-6 py-4 align-top"><textarea class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
+                <td class="px-6 py-4 align-top"><textarea id="d-bias" class="w-full p-3 border-2 border-gray-200 rounded-lg"></textarea></td>
               </tr>
             </tbody>
           </table>
@@ -454,6 +454,23 @@
   </div>
 
 <script>
+// ==== GOOGLE FORM BRIDGE (single-field JSON) ====
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSc4Sl3oBXVkZw_FD8Hp0SDmUs4himofkZwV0RBT_mbat_wi5A/formResponse';
+const FORM_ENTRY  = 'entry.1120786177'; // the single short-answer "payload" item
+
+async function postToGoogleFormPayload(payloadObject) {
+  const fd = new FormData();
+  fd.append(FORM_ENTRY, JSON.stringify(payloadObject));
+  try {
+    // Forms ignores CORS; opaque response is expected — treat as success.
+    await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: fd });
+    return true;
+  } catch (err) {
+    console.warn('Form post failed:', err);
+    return false;
+  }
+}
+
 /* ===================== I18N ===================== */
 const STR = {
   en: {
@@ -986,23 +1003,104 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initEasternTime();
 });
 
+function getETIsoPair() {
+  const now = new Date();
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true
+  });
+  const parts = Object.fromEntries(fmt.formatToParts(now).map(p => [p.type, p.value]));
+  const et_display = `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second} ${parts.dayPeriod} ET`;
+  return { et_display, iso: now.toISOString() };
+}
+
+function readVal(id){ return (document.getElementById(id)?.value || '').trim(); }
+
+function buildSubmissionPayload() {
+  const lang = document.getElementById('lang')?.value || 'en';
+  const first = readVal('student-first-name');
+  const last  = readVal('student-last-name');
+  const period= (document.getElementById('class-period')?.value || '').trim();
+
+  const { et_display, iso } = getETIsoPair();
+
+  return {
+    meta: {
+      assignment: "SQ1 Formative Task: Sale of Manhattan",
+      page_title: document.title,
+      lang,
+      submitted_at_iso: iso,
+      submitted_at_et: et_display,
+      user_agent: navigator.userAgent
+    },
+    student: {
+      first_name: first,
+      last_name: last,
+      class_period: period,
+      // lightweight submission id for dedupe/debug
+      submission_id: `SQ1-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(-4).toUpperCase()}`
+    },
+    responses: {
+      A: {
+        sourcing: readVal('a-sourcing'),
+        cite:     readVal('a-cite'),
+        bias:     readVal('a-bias')
+      },
+      B: {
+        sourcing: readVal('b-sourcing'),
+        cite:     readVal('b-cite'),
+        bias:     readVal('b-bias')
+      },
+      C: {
+        sourcing: readVal('c-sourcing'),
+        cite:     readVal('c-cite'),
+        bias:     readVal('c-bias')
+      },
+      D: {
+        sourcing: readVal('d-sourcing'),
+        cite:     readVal('d-cite'),
+        bias:     readVal('d-bias')
+      },
+      summary: readVal('summary')
+    }
+  };
+}
+
 /* ===================== Submit work button ===================== */
 const submitWorkBtn = document.getElementById('submit-work-btn');
 if (submitWorkBtn) {
-  submitWorkBtn.addEventListener('click', () => {
+  submitWorkBtn.addEventListener('click', async () => {
     if (submitWorkBtn.disabled) return;
+
     const firstName = document.getElementById('student-first-name');
-    const lastName = document.getElementById('student-last-name');
-    const classSelect = document.getElementById('class-period');
-    if (!firstName?.value.trim() || !lastName?.value.trim() || !classSelect?.value.trim()) {
+    const lastName  = document.getElementById('student-last-name');
+    const classSel  = document.getElementById('class-period');
+
+    if (!firstName?.value.trim() || !lastName?.value.trim() || !classSel?.value.trim()) {
       alert('Please enter your first name, last name, and class period before submitting.');
       return;
     }
-    const targetUrl = submitWorkBtn.dataset.formUrl?.trim();
-    if (targetUrl) {
-      window.open(targetUrl, '_blank', 'noopener');
+
+    // Build payload and send to Google Form single-field
+    const payload = buildSubmissionPayload();
+
+    submitWorkBtn.disabled = true;
+    submitWorkBtn.setAttribute('aria-disabled','true');
+    submitWorkBtn.querySelector('span').textContent = 'Submitting…';
+
+    const ok = await postToGoogleFormPayload(payload);
+
+    submitWorkBtn.disabled = false;
+    submitWorkBtn.setAttribute('aria-disabled','false');
+    submitWorkBtn.querySelector('span').textContent = 'Submit Work';
+
+    if (ok) {
+      alert('Submitted! Your work has been recorded.');
+      localStorage.setItem('sq1-last-submission', JSON.stringify(payload));
+      // (Optional) visual confirmation or clear fields here
     } else {
-      alert('A submission form will be linked here soon.');
+      alert('Could not reach the form right now. Your work is still on this page — try again.');
     }
   });
 }

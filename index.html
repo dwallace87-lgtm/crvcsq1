@@ -90,12 +90,23 @@
             <option value="ar">العربية</option>
           </select>
         </div>
-        <button id="submit-work-btn" type="button" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none" disabled aria-disabled="true">
-          <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16.5V21h4.5M20 7l-8.5 8.5m0 0L9 21l5.5-2.5m-3-3L3 9l5-5 8.5 8.5" />
-          </svg>
-          <span>Submit Work</span>
-        </button>
+        <div class="flex flex-col gap-1">
+          <div class="flex flex-wrap gap-2 justify-end">
+            <button id="save-progress-btn" type="button" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16v1a2 2 0 01-2 2H9a2 2 0 01-2-2v-1m10 0h1a1 1 0 001-1V7.414a1 1 0 00-.293-.707l-4.414-4.414A1 1 0 0012.586 2H8a2 2 0 00-2 2v11a1 1 0 001 1h10zm-3-6a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span>Save Progress</span>
+            </button>
+            <button id="submit-work-btn" type="button" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none" disabled aria-disabled="true">
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16.5V21h4.5M20 7l-8.5 8.5m0 0L9 21l5.5-2.5m-3-3L3 9l5-5 8.5 8.5" />
+              </svg>
+              <span>Submit Work</span>
+            </button>
+          </div>
+          <p id="save-progress-status" class="text-xs text-right text-gray-500" aria-live="polite"></p>
+        </div>
       </div>
     </div>
     <form id="student-info" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4" autocomplete="off" novalidate>
@@ -1285,6 +1296,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initHighlightTools();
   setLang('en');
   initStudentInfoControls();
+  progressPersistenceApi = initProgressPersistence();
   initEntryFieldProtections();
   initEasternTime();
 });
@@ -1353,6 +1365,172 @@ function buildSubmissionPayload() {
   };
 }
 
+/* ===================== Progress persistence ===================== */
+const PROGRESS_STORAGE_KEY = 'sq1-progress-draft';
+const SAVEABLE_FIELD_IDS = [
+  'student-first-name',
+  'student-last-name',
+  'class-period',
+  'lang',
+  'a-sourcing', 'a-cite', 'a-bias',
+  'b-sourcing', 'b-cite', 'b-bias',
+  'c-sourcing', 'c-cite', 'c-bias',
+  'd-sourcing', 'd-cite', 'd-bias',
+  'summary'
+];
+
+let progressPersistenceApi = null;
+
+function safeReadDraft() {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    console.warn('Unable to read saved progress', err);
+    return null;
+  }
+}
+
+function safeWriteDraft(data) {
+  if (typeof localStorage === 'undefined') return false;
+  try {
+    localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data));
+    return true;
+  } catch (err) {
+    console.warn('Unable to save progress', err);
+    return false;
+  }
+}
+
+function safeClearDraft() {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    localStorage.removeItem(PROGRESS_STORAGE_KEY);
+  } catch (err) {
+    console.warn('Unable to clear saved progress', err);
+  }
+}
+
+function collectSaveableValues() {
+  const values = {};
+  SAVEABLE_FIELD_IDS.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el || typeof el.value === 'undefined') return;
+    values[id] = el.value;
+  });
+  return values;
+}
+
+function applySavedValues(values) {
+  if (!values || typeof values !== 'object') return;
+  let langToRestore = null;
+
+  Object.entries(values).forEach(([id, value]) => {
+    if (id === 'lang') {
+      langToRestore = value;
+      return;
+    }
+
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    if (el instanceof HTMLSelectElement) {
+      const hasOption = Array.from(el.options).some((opt) => opt.value === value);
+      if (!hasOption) return;
+      el.value = value;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    } else if (typeof el.value !== 'undefined') {
+      el.value = value ?? '';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  });
+
+  if (typeof langToRestore === 'string' && STR[langToRestore]) {
+    const langEl = document.getElementById('lang');
+    if (langEl instanceof HTMLSelectElement) {
+      langEl.value = langToRestore;
+      setLang(langToRestore);
+    }
+  }
+}
+
+function formatSavedTimestamp(iso) {
+  try {
+    return new Intl.DateTimeFormat('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    }).format(new Date(iso));
+  } catch (err) {
+    return iso;
+  }
+}
+
+function initProgressPersistence() {
+  const saveBtn = document.getElementById('save-progress-btn');
+  const statusEl = document.getElementById('save-progress-status');
+  const labelEl = saveBtn?.querySelector('span') || null;
+  const defaultLabel = labelEl?.textContent || '';
+
+  const setStatus = (text) => {
+    if (statusEl) {
+      statusEl.textContent = text || '';
+    }
+  };
+
+  const saved = safeReadDraft();
+  if (saved?.values) {
+    applySavedValues(saved.values);
+    if (saved.savedAt) {
+      setStatus(`Last saved: ${formatSavedTimestamp(saved.savedAt)}`);
+    } else {
+      setStatus('Draft restored.');
+    }
+  }
+
+  if (!saveBtn) {
+    return {
+      clearAfterSubmit() {
+        safeClearDraft();
+        setStatus('');
+      }
+    };
+  }
+
+  const showSavedFeedback = () => {
+    if (!labelEl) return;
+    labelEl.textContent = 'Saved!';
+    saveBtn.classList.add('ring-2', 'ring-emerald-400');
+    setTimeout(() => {
+      labelEl.textContent = defaultLabel;
+      saveBtn.classList.remove('ring-2', 'ring-emerald-400');
+    }, 1500);
+  };
+
+  saveBtn.addEventListener('click', () => {
+    const values = collectSaveableValues();
+    const savedAt = new Date().toISOString();
+    const payload = { savedAt, values };
+    const ok = safeWriteDraft(payload);
+    if (ok) {
+      setStatus(`Last saved: ${formatSavedTimestamp(savedAt)}`);
+      showSavedFeedback();
+    } else {
+      alert('Could not save your progress. Please check your browser settings.');
+    }
+  });
+
+  return {
+    clearAfterSubmit() {
+      safeClearDraft();
+      if (labelEl) {
+        labelEl.textContent = defaultLabel;
+      }
+      setStatus('Draft cleared after submission.');
+    }
+  };
+}
+
 /* ===================== Submit work button ===================== */
 const submitWorkBtn = document.getElementById('submit-work-btn');
 if (submitWorkBtn) {
@@ -1384,6 +1562,7 @@ if (submitWorkBtn) {
     if (ok) {
       alert('Submitted! Your work has been recorded.');
       localStorage.setItem('sq1-last-submission', JSON.stringify(payload));
+      progressPersistenceApi?.clearAfterSubmit();
       // (Optional) visual confirmation or clear fields here
     } else {
       alert('Could not reach the form right now. Your work is still on this page — try again.');

@@ -1075,6 +1075,7 @@ function setLang(code){
   qs('#i-r').textContent = t.R; qs('#i-a').textContent = t.A; qs('#i-c').textContent = t.C; qs('#i-e').textContent = t.E;
   qs('#i-r-desc').textContent = t.Rdesc; qs('#i-a-desc').textContent = t.Adesc; qs('#i-c-desc').textContent = t.Cdesc; qs('#i-e-desc').textContent = t.Edesc;
 
+  wireGlossaryTriggers();
   updateHighlightTexts();
 
   // Close any open bubbles
@@ -1191,11 +1192,22 @@ function openGlossaryFor(el){
 }
 function closeGlossary(){ bubble.classList.add('hidden'); }
 
-document.querySelectorAll('.tooltip-trigger').forEach(t=>{
-  t.setAttribute('tabindex','0');
-  t.addEventListener('click', (e)=>{ e.stopPropagation(); openGlossaryFor(t); });
-  t.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openGlossaryFor(t);} });
-});
+function wireGlossaryTriggers(){
+  document.querySelectorAll('.tooltip-trigger').forEach((el)=>{
+    if (el.dataset.glossaryBound === 'true') return;
+    el.dataset.glossaryBound = 'true';
+    el.setAttribute('tabindex','0');
+    el.addEventListener('click', (e)=>{ e.stopPropagation(); openGlossaryFor(el); });
+    el.addEventListener('keydown', (e)=>{
+      if (e.key==='Enter' || e.key===' ') {
+        e.preventDefault();
+        openGlossaryFor(el);
+      }
+    });
+  });
+}
+
+wireGlossaryTriggers();
 closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); closeGlossary(); });
 document.addEventListener('click', (e)=>{ if(!bubble.contains(e.target)) closeGlossary(); });
 addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeGlossary(); });

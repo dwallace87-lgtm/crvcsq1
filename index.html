@@ -593,6 +593,7 @@
             <p class="text-sm text-red-700" id="i-e-desc">Explain how the evidence supports your answer.</p>
           </div>
         </div>
+        <p class="mt-4 text-center text-sm text-gray-700" id="i-race-question">Did the Munsee Lenape band of Algonquin benefit from the sale of Manhattan Island?</p>
       </div>
       <textarea id="summary" class="w-full h-40 p-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500" data-stem="summary"></textarea>
     </section>
@@ -697,6 +698,7 @@ const STR = {
     },
     summaryTitle:"In Summary",
     summaryLabel:"Based on all four sources, answer the supporting question in 3–5 sentences.",
+    raceQuestion:"Did the Munsee Lenape band of Algonquin benefit from the sale of Manhattan Island?",
     R:"Restate", A:"Answer", C:"Cite Evidence", E:"Explain",
     Rdesc:"Restate the question as a statement.",
     Adesc:"Give your claim to finish the sentence.",
@@ -784,6 +786,7 @@ const STR = {
     },
     summaryTitle:"En resumen",
     summaryLabel:"Con base en las cuatro fuentes, responde la pregunta guía en 3–5 oraciones.",
+    raceQuestion:"¿Se benefició la banda Munsee Lenape de la venta de la isla de Manhattan?",
     R:"Reformular", A:"Responder", C:"Citar evidencia", E:"Explicar",
     Rdesc:"Reformula la pregunta como afirmación.",
     Adesc:"Da tu afirmación para completar la idea.",
@@ -870,6 +873,7 @@ const STR = {
     },
     summaryTitle:"En résumé",
     summaryLabel:"À partir des quatre sources, répondez en 3–5 phrases.",
+    raceQuestion:"La bande munsee lenape a-t-elle profité de la vente de Manhattan ?",
     R:"Reformuler", A:"Répondre", C:"Citer des preuves", E:"Expliquer",
     Rdesc:"Reformulez la question en affirmation.",
     Adesc:"Exposez votre thèse.",
@@ -956,6 +960,7 @@ const STR = {
     },
     summaryTitle:"الخلاصة",
     summaryLabel:"استنادًا إلى المصادر الأربعة، أجب في 3–5 جمل.",
+    raceQuestion:"هل استفادت جماعة المونسي من شعب لنابي من بيع جزيرة مانهاتن؟",
     R:"إعادة الصياغة", A:"الإجابة", C:"الاستشهاد", E:"الشرح",
     Rdesc:"أعد صياغة السؤال كجملة.",
     Adesc:"قدّم ادعاءك.",
@@ -1096,6 +1101,8 @@ function setLang(code){
   // Summary
   qs('#i-summary-title').textContent = t.summaryTitle;
   qs('#i-summary-label').textContent = t.summaryLabel;
+  const raceQuestionEl = qs('#i-race-question');
+  if (raceQuestionEl) raceQuestionEl.textContent = t.raceQuestion;
   qs('#i-r').textContent = t.R; qs('#i-a').textContent = t.A; qs('#i-c').textContent = t.C; qs('#i-e').textContent = t.E;
   qs('#i-r-desc').textContent = t.Rdesc; qs('#i-a-desc').textContent = t.Adesc; qs('#i-c-desc').textContent = t.Cdesc; qs('#i-e-desc').textContent = t.Edesc;
 

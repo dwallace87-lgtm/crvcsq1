@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Analyzing the Sale of Manhattan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Roboto',sans-serif;background:#0b1020;overscroll-behavior:none;overflow:hidden}
+    .font-title{font-family:'Roboto Slab',serif}
+
+    :root{
+      --vh:1vh;
+      --scale:1.0;           /* global text scale */
+      --accent:#1D4ED8;
+      --accent-dark:#1E40AF;
+      --ink:#0f172a;
+    }
+
+    #stage{
+      position:fixed;inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      width:100vw;height:calc(var(--vh)*100);background:#0b1020;
+    }
+    #slide-container{position:relative;width:100%;height:100%;overflow:hidden}
+
+    /* Slides */
+    .slide{
+      position:absolute;inset:0;display:none;opacity:0;transition:opacity .2s ease;
+      padding:clamp(12px,2.5vmin,36px);
+      background:#ffffff;outline:6px solid var(--accent);border-radius:18px;margin:clamp(6px,1.5vmin,16px);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      transform-origin:center center;
+    }
+    .slide.active{display:flex;opacity:1}
+    .slide .content{transform:scale(var(--scale));transform-origin:center top}
+
+    /* Big type system tuned for teens in the back row */
+    .title-xl{font-size:clamp(34px,7.8vmin,86px);line-height:1.07}
+    .title-lg{font-size:clamp(28px,6.6vmin,70px);line-height:1.1}
+    .title-md{font-size:clamp(24px,5.3vmin,56px);line-height:1.15}
+    .body-xl{font-size:clamp(20px,3.8vmin,36px);line-height:1.28}
+    .body-lg{font-size:clamp(18px,3.2vmin,30px);line-height:1.33}
+
+    /* Media */
+    .media-wrap{display:flex;align-items:center;justify-content:center;width:100%;max-width:1200px;height:min(48vh,60svh);margin-top:clamp(8px,1.5vmin,20px)}
+    .media-wrap img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+    figure{width:100%}
+    figcaption{margin-top:.6rem;text-align:center;color:#334155;font-size:clamp(14px,2.4vmin,20px)}
+
+    /* Tooltip */
+    .tooltip-trigger{cursor:pointer;border-bottom:3px dotted #DC2626}
+    .tooltip{
+      position:absolute;display:none;background:#1E3A8A;color:#fff;padding:12px 16px;border-radius:10px;
+      box-shadow:0 4px 12px rgba(0,0,0,.25);font-size:clamp(14px,2.4vmin,20px);z-index:10;bottom:110%;left:50%;transform:translateX(-50%);
+      white-space:nowrap
+    }
+    .tooltip::after{content:"";position:absolute;top:100%;left:50%;margin-left:-8px;border-width:8px;border-style:solid;border-color:#1E3A8A transparent transparent transparent}
+
+    /* Highlight + SEL */
+    mark.hl{background:#fde047;padding:.1em .2em;border-radius:.25rem}
+    .sentence-stem{color:#DC2626;font-weight:700}
+    .fill-in{color:var(--accent);font-weight:700;text-decoration:underline}
+
+    /* Spotlight focus */
+    #spotlightOverlay{
+      position:absolute;inset:0;pointer-events:none;display:none;z-index:30;
+      background:radial-gradient(circle 140px at var(--x,50%) var(--y,50%), rgba(0,0,0,0) 0, rgba(0,0,0,0.0) 35%, rgba(0,0,0,0.45) 36%, rgba(0,0,0,0.65) 100%);
+      transition:opacity .2s ease
+    }
+    .focus-on #spotlightOverlay{display:block}
+
+    /* Floating controls */
+    #controls{
+      position:fixed;right:max(10px,env(safe-area-inset-right));left:auto;bottom:max(12px,env(safe-area-inset-bottom));
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;z-index:50;pointer-events:none
+    }
+    .btn, #progress, .range{
+      pointer-events:auto;border:none;border-radius:12px;padding:12px 16px;font-family:'Roboto Slab',serif;font-weight:700;
+      font-size:clamp(14px,2.8vmin,22px);box-shadow:0 8px 20px rgba(0,0,0,.2)
+    }
+    .btn{background:var(--accent);color:#fff;cursor:pointer;transition:transform .12s,box-shadow .12s,background .12s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.25);background:var(--accent-dark)}
+    .btn:disabled{background:#9CA3AF;cursor:not-allowed;opacity:.9}
+    #progress{background:#fff;color:#111827}
+    .range{padding:8px 12px;background:#fff}
+    .range input{vertical-align:middle}
+
+    /* Caption Coach panel */
+    #coach{
+      position:fixed;left:max(12px,env(safe-area-inset-left));top:max(12px,env(safe-area-inset-top));
+      background:#ffffff;border:3px solid var(--accent);border-radius:14px;padding:10px;z-index:60;display:none;width:min(92vw,520px)
+    }
+    #coach.open{display:block}
+    #coach h3{margin:0 0 .25rem 0;font-family:'Roboto Slab',serif;font-size:clamp(18px,3.4vmin,26px);color:var(--ink)}
+    #coach textarea{width:100%;min-height:86px;border:2px solid #cbd5e1;border-radius:10px;padding:10px;font-size:clamp(14px,2.6vmin,18px)}
+    #coach .coach-actions{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+
+    /* A11y */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div id="slide-container">
+      <div id="spotlightOverlay" aria-hidden="true"></div>
+
+      <!-- Slide 1 -->
+      <section id="slide1" class="slide active">
+        <div class="content w-full grid grid-cols-1 md:grid-cols-5 gap-6 items-center max-w-[1700px]">
+          <div class="md:col-span-3 text-center md:text-left">
+            <h1 class="font-title title-xl text-blue-700 font-extrabold">
+              Do reparations vindicate colonization?
+            </h1>
+            <h2 class="font-title title-lg mt-2 text-gray-900">Supporting Question 1</h2>
+            <p class="font-title title-md text-red-600 font-extrabold mt-3 relative inline-block">
+              Did the
+              <span id="tooltip-trigger" class="tooltip-trigger" tabindex="0">Munsee Lenape</span>
+              benefit from the sale of Manhattan?
+              <span id="tooltip-bubble" class="tooltip">The Munsee are a specific band of the Lenape people.</span>
+            </p>
+          </div>
+          <div class="md:col-span-2">
+            <figure class="media-wrap">
+              <img src="https://www.history101.nyc/system/carrierwave/evo/19/watermark_1024_Lenape-Mother-and-Daughter-Retouched.jpg" alt="Lenape mother and daughter" onerror="this.style.display='none'"/>
+            </figure>
+            <figcaption data-auto-caption></figcaption>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2 -->
+      <section id="slide2" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">How does this fit?</h2>
+          <p class="body-xl mt-4 text-slate-800 text-center">
+            To answer our big question about <span class="font-bold text-red-600">reparations</span>, we first lock in the <span class="font-bold text-red-600">original event</span>.
+          </p>
+          <p class="body-xl mt-3 text-slate-900 text-center">
+            Today we analyze <span class="font-bold">4 sources</span> and decide who really benefited from the sale of Manhattan.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 3 -->
+      <section id="slide3" class="slide">
+        <div class="content w-full grid grid-cols-1 md:grid-cols-2 gap-6 items-center max-w-[1700px]">
+          <div>
+            <h2 class="font-title title-lg text-blue-700 font-extrabold">What do you already know?</h2>
+            <p class="body-xl mt-3 text-slate-800">Think, pair, share.</p>
+            <p class="body-xl mt-2 text-slate-900">
+              What have you heard about the <span class="font-bold">purchase</span> of Manhattan Island?
+            </p>
+          </div>
+          <div>
+            <figure class="media-wrap">
+              <img src="https://external-preview.redd.it/L0U1q_GlOdKzAGSsR0PfyAZpBYgDjBEFp2idslSUd98.jpg?auto=webp&s=8e70869ae259d078f69d4e17bbbbdab6906fae56" alt="Depiction of the purchase of Manhattan" onerror="this.style.display='none'"/>
+            </figure>
+            <figcaption data-auto-caption></figcaption>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4 -->
+      <section id="slide4" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">Why this matters</h2>
+          <ul class="body-xl mt-4 text-slate-900 list-decimal list-outside text-left max-w-[1100px] mx-auto space-y-3" data-highlightable>
+            <li>See one event told in <strong>different ways</strong>.</li>
+            <li>Question a source’s <strong>purpose</strong> and <strong>bias</strong>.</li>
+            <li>Use <strong>evidence</strong> to build your own claim.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 5 -->
+      <section id="slide5" class="slide">
+        <div class="content w-full max-w-[1600px] text-center">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold">Our mission</h2>
+          <p class="body-xl mt-3 text-slate-800 max-w-[1100px] mx-auto">
+            Analyze <span class="font-bold">4 historical sources</span> to write a paragraph that answers our
+            <span class="font-bold text-red-600">Supporting Question</span>.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 6 -->
+      <section id="slide6" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">Look fors</h2>
+          <ul class="body-xl mt-4 text-slate-900 list-disc text-left max-w-[1100px] mx-auto space-y-2" data-highlightable>
+            <li><span class="font-bold text-blue-700">Sourcing:</span> Who made this. Why.</li>
+            <li><span class="font-bold text-blue-700">Cite evidence:</span> What does it say or show.</li>
+            <li><span class="font-bold text-blue-700">Bias or insight:</span> Point of view and what might be missing.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 7 -->
+      <section id="slide7" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">Let’s practice — Source A</h2>
+          <ul class="body-xl mt-4 text-slate-900 list-disc text-left max-w-[1100px] mx-auto space-y-2" data-highlightable>
+            <li><strong>Sourcing:</strong> Who wrote this letter. Who was it for.</li>
+            <li><strong>Evidence:</strong> What does the letter say they bought.</li>
+            <li><strong>Bias:</strong> How could the author be bragging to the boss.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 8 -->
+      <section id="slide8" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">Let’s practice — Source B</h2>
+          <ul class="body-xl mt-4 text-slate-900 list-disc text-left max-w-[1100px] mx-auto space-y-2" data-highlightable>
+            <li><strong>Sourcing:</strong> When was this map made.</li>
+            <li><strong>Evidence:</strong> What do you see inside the walls.</li>
+            <li><strong>Insight:</strong> What does this map say about Dutch priorities.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 9 -->
+      <section id="slide9" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">Let’s practice — Source C</h2>
+          <ul class="body-xl mt-4 text-slate-900 list-disc text-left max-w-[1100px] mx-auto space-y-2" data-highlightable>
+            <li><strong>Sourcing:</strong> Primary or secondary.</li>
+            <li><strong>Evidence:</strong> What happened to the Munsee after settlers arrived.</li>
+            <li><strong>Insight:</strong> Does this sound like a benefit for the Munsee.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 10 -->
+      <section id="slide10" class="slide">
+        <div class="content w-full max-w-[1600px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center">Let’s practice — Source D</h2>
+        <ul class="body-xl mt-4 text-slate-900 list-disc text-left max-w-[1100px] mx-auto space-y-2" data-highlightable>
+            <li><strong>Sourcing:</strong> What is this map showing.</li>
+            <li><strong>Evidence:</strong> Where are Lenape (Munsee) descendants living today.</li>
+            <li><strong>Insight:</strong> How does this map help your claim.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 11 -->
+      <section id="slide11" class="slide">
+        <div class="content w-full max-w-[1700px] text-center">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold">Your turn</h2>
+          <div class="mt-3 p-4 md:p-6 bg-slate-100 rounded-lg w-full max-w-[1200px] mx-auto">
+            <p class="font-title title-md text-red-600 font-extrabold">RACE paragraph</p>
+            <ul class="body-lg mt-2 space-y-2" data-highlightable>
+              <li><strong>R + A:</strong> Restate the question and answer with your claim.</li>
+              <li><strong>C:</strong> Cite specific evidence from the sources.</li>
+              <li><strong>E:</strong> Explain how your evidence proves your answer.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12 -->
+      <section id="slide12" class="slide">
+        <div class="content w-full max-w-[1700px]">
+          <h2 class="font-title title-lg text-blue-700 font-extrabold text-center mb-2">Model paragraph</h2>
+          <div class="p-4 md:p-6 bg-slate-100 rounded-lg w-full max-w-[1250px] mx-auto body-xl leading-relaxed" data-highlightable>
+            <p><span class="sentence-stem">The Munsee Lenape <span class="fill-in">________</span> benefit from the sale of Manhattan Island because <span class="fill-in">________</span>.</span></p>
+            <p class="mt-3"><span class="sentence-stem">Source <span class="fill-in">________</span> shows that <span class="fill-in">________</span>. This suggests <span class="fill-in">________</span>.</span></p>
+            <p class="mt-3"><span class="sentence-stem">Furthermore, Source <span class="fill-in">________</span> shows <span class="fill-in">________</span>. This indicates <span class="fill-in">________</span>.</span></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Controls right -->
+  <div id="controls" aria-controls="slide-container">
+    <button id="prev-btn" class="btn" aria-label="Previous">❮ Prev</button>
+    <div id="progress" aria-live="polite" aria-atomic="true">1 / 12</div>
+    <button id="next-btn" class="btn" aria-label="Next">Next ❯</button>
+    <div class="range">
+      <label for="scale" class="mr-2">Text Size</label>
+      <input id="scale" type="range" min="95" max="135" value="115"/>
+    </div>
+    <button id="focusBtn" class="btn" aria-pressed="false">🎯 Focus</button>
+    <button id="penBtn" class="btn" aria-pressed="false">🖍️ Highlight</button>
+    <button id="coachBtn" class="btn" aria-pressed="false">📝 Caption Coach</button>
+  </div>
+
+  <!-- Caption Coach -->
+  <aside id="coach" role="dialog" aria-modal="true" aria-labelledby="coachTitle">
+    <h3 id="coachTitle" class="font-title">Caption Coach</h3>
+    <p class="body-lg" style="margin:.25rem 0 .5rem 0;">Add a short caption to hook the room.</p>
+    <textarea id="captionText" placeholder="Ex: ‘Family. Land. Memory. Who gets to decide the price?’"></textarea>
+    <div class="coach-actions">
+      <button id="applyCaption" class="btn">Apply to this slide</button>
+      <button id="clearCaption" class="btn">Clear</button>
+      <button id="closeCoach" class="btn">Close</button>
+    </div>
+  </aside>
+
+  <!-- A11y announcer -->
+  <div id="announcer" class="sr-only" aria-live="polite"></div>
+
+  <script>
+    // viewport unit fix
+    function setVh(){document.documentElement.style.setProperty('--vh', `${window.innerHeight*0.01}px`);}
+    setVh(); addEventListener('resize', setVh); addEventListener('orientationchange', setVh);
+
+    let currentSlide=1; const totalSlides=12;
+    const slides=[...document.querySelectorAll('.slide')];
+    const prevBtn=document.getElementById('prev-btn');
+    const nextBtn=document.getElementById('next-btn');
+    const progress=document.getElementById('progress');
+    const announcer=document.getElementById('announcer');
+
+    const tooltipTrigger=document.getElementById('tooltip-trigger');
+    const tooltipBubble=document.getElementById('tooltip-bubble');
+
+    const stage=document.getElementById('stage');
+    const spotlight=document.getElementById('spotlightOverlay');
+    const focusBtn=document.getElementById('focusBtn');
+    const penBtn=document.getElementById('penBtn');
+    const coach=document.getElementById('coach');
+    const coachBtn=document.getElementById('coachBtn');
+    const captionText=document.getElementById('captionText');
+    const applyCaption=document.getElementById('applyCaption');
+    const clearCaption=document.getElementById('clearCaption');
+    const closeCoach=document.getElementById('closeCoach');
+    const scaleInput=document.getElementById('scale');
+
+    // slide control
+    function showSlide(n){
+      currentSlide=Math.max(1,Math.min(totalSlides,n));
+      slides.forEach(s=>s.classList.remove('active'));
+      const active=document.getElementById(`slide${currentSlide}`);
+      if(active) active.classList.add('active');
+      prevBtn.disabled=currentSlide===1;
+      nextBtn.disabled=currentSlide===totalSlides;
+      progress.textContent=`${currentSlide} / ${totalSlides}`;
+      announcer.textContent=`Slide ${currentSlide} of ${totalSlides}`;
+      // reset caption box with current slide caption if any
+      const cap=active.querySelector('figcaption[data-auto-caption]');
+      captionText.value = cap ? cap.textContent.trim() : '';
+    }
+    function nextSlideFn(){ if(currentSlide<totalSlides) showSlide(currentSlide+1); }
+    function prevSlideFn(){ if(currentSlide>1) showSlide(currentSlide-1); }
+
+    nextBtn.addEventListener('click', nextSlideFn);
+    prevBtn.addEventListener('click', prevSlideFn);
+
+    // keyboard
+    document.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextSlideFn();}
+      if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevSlideFn();}
+      if(e.key==='Home'){e.preventDefault();showSlide(1);}
+      if(e.key==='End'){e.preventDefault();showSlide(totalSlides);}
+    });
+
+    // click background to advance
+    stage.addEventListener('click', e=>{
+      const interactive = e.target.closest('button,a,input,textarea,select,[role="button"],.tooltip-trigger,#coach');
+      if(!interactive) nextSlideFn();
+    });
+
+    // tooltip
+    function showTip(){tooltipBubble.style.display='block'}
+    function hideTip(){tooltipBubble.style.display='none'}
+    if(tooltipTrigger){
+      tooltipTrigger.addEventListener('mouseenter', showTip);
+      tooltipTrigger.addEventListener('focus', showTip);
+      tooltipTrigger.addEventListener('mouseleave', hideTip);
+      tooltipTrigger.addEventListener('blur', hideTip);
+      tooltipTrigger.addEventListener('click', e=>{
+        e.preventDefault();
+        const shown=tooltipBubble.style.display==='block';
+        if(shown) hideTip(); else showTip();
+      });
+      document.addEventListener('click', e=>{
+        if(e.target!==tooltipTrigger && !tooltipTrigger.contains(e.target)) hideTip();
+      });
+    }
+
+    // spotlight focus
+    let focusOn=false;
+    focusBtn.addEventListener('click', ()=>{
+      focusOn=!focusOn;
+      focusBtn.setAttribute('aria-pressed', String(focusOn));
+      document.body.classList.toggle('focus-on', focusOn);
+    });
+    stage.addEventListener('mousemove', e=>{
+      if(!focusOn) return;
+      const rect=stage.getBoundingClientRect();
+      const x=((e.clientX-rect.left)/rect.width)*100;
+      const y=((e.clientY-rect.top)/rect.height)*100;
+      spotlight.style.setProperty('--x', x+'%');
+      spotlight.style.setProperty('--y', y+'%');
+    });
+
+    // quick highlight pen: click sentences or list items to toggle <mark>
+    let penOn=false;
+    penBtn.addEventListener('click', ()=>{
+      penOn=!penOn;
+      penBtn.setAttribute('aria-pressed', String(penOn));
+      announcer.textContent= penOn ? 'Highlight on' : 'Highlight off';
+    });
+
+    function toggleHighlight(target){
+      // Wrap whole node text in mark if not already
+      if(target.closest('mark.hl')){
+        const m=target.closest('mark.hl');
+        const parent=m.parentNode;
+        while(m.firstChild) parent.insertBefore(m.firstChild, m);
+        parent.removeChild(m);
+        return;
+      }
+      const wrapper=document.createElement('mark');
+      wrapper.className='hl';
+      // if target has children, wrap the element itself
+      if(target.childNodes.length>0){
+        const range=document.createRange();
+        range.selectNodeContents(target);
+        const contents=range.extractContents();
+        wrapper.appendChild(contents);
+        target.appendChild(wrapper);
+      }else{
+        wrapper.textContent=target.textContent;
+        target.textContent='';
+        target.appendChild(wrapper);
+      }
+    }
+
+    document.getElementById('slide-container').addEventListener('click', e=>{
+      if(!penOn) return;
+      const candidate = e.target.closest('[data-highlightable] li, [data-highlightable] p');
+      if(candidate){ e.preventDefault(); toggleHighlight(candidate); }
+    });
+
+    // Caption Coach
+    function getActiveCaptionNode(){
+      const slide=document.getElementById(`slide${currentSlide}`);
+      return slide ? slide.querySelector('figcaption[data-auto-caption]') : null;
+    }
+    coachBtn.addEventListener('click', ()=>{
+      coach.classList.toggle('open');
+      coachBtn.setAttribute('aria-pressed', coach.classList.contains('open'));
+    });
+    closeCoach.addEventListener('click', ()=> coach.classList.remove('open'));
+    applyCaption.addEventListener('click', ()=>{
+      const cap=getActiveCaptionNode();
+      if(cap){ cap.textContent=captionText.value.trim(); }
+    });
+    clearCaption.addEventListener('click', ()=>{
+      const cap=getActiveCaptionNode();
+      if(cap){ cap.textContent=''; captionText.value=''; }
+    });
+
+    // Text size scaler
+    function setScale(){
+      const v = Number(scaleInput.value)/100;
+      document.documentElement.style.setProperty('--scale', v.toString());
+    }
+    scaleInput.addEventListener('input', setScale);
+    setScale();
+
+    // start
+    showSlide(currentSlide);
+  </script>
+</body>
+</html>
